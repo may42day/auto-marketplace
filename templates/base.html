@@ -7,7 +7,7 @@
 </head>
 <body>
 {% if request.user.is_authenticated %}
-{{ user.username}} <a href="{% url 'logout' %}">Exit</a>
+{{ user.profile.user_type }}, {{ user.username }} <a href="{% url 'logout' %}">Exit</a>
 {% else %}
     <a href="{% url 'sign_up' %}">Sign Up</a> |
     <a href="{% url 'login' %}">Log In</a>
