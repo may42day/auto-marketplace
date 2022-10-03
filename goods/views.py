@@ -1,3 +1,8 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def create_product_card(request):
+    return render(request, 'goods/new_product_card.html')
+
+def market(request):
+    return render(request, 'goods/market.html')

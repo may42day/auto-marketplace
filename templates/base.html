@@ -12,7 +12,10 @@
     <a href="{% url 'sign_up' %}">Sign Up</a> |
     <a href="{% url 'login' %}">Log In</a>
 {% endif %}
-
+    <br>
+    <a href="{% url 'start-page' %}">START PAGE</a> <br>
+    <a href="{% url 'create-card' %}">Create new product card</a> <br>
+    <a href="{% url 'market' %}">Visit market</a>
 {% block content %}{% endblock %}
 </body>
 </html>
