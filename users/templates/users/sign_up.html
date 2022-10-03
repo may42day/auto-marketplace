@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}SignUp{% endblock %}
-
+{% block link %}
+<link rel="stylesheet" href="{% static 'users/forms.css' %}">{% endblock %}
 
 {% block content %}
     <h1>Create new account</h1>
     <form action="/sign_up" method="post">
         {% csrf_token %}
         {% for field in user_form %}
-            <div>
+            <div class="form-style {% if field.errors %} errors {% endif %}">
                 {{ field.label_tag }}
                 {{ field }}
                 {{ field.errors }}
@@ -16,12 +17,13 @@
         {% endfor %}
 
         {% for field in profile_form %}
-            <div>
+            <div class="form-style">
                 {{ field.label_tag }}
                 {{ field }}
                 {{ field.errors }}
             </div>
         {% endfor %}
+        <br>
         <button type="submit">Create account</button>
     </form>
 {% endblock %}
