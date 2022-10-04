@@ -1,7 +1,8 @@
 from django.urls import path, include
-from .views import create_product_card, market
+from . import views
 
 urlpatterns = [
-    path('create', create_product_card, name='create-card'),
-    path('', market, name='market'),
+    path('create', views.create_product_card, name='create-card'),
+    path('', views.market, name='market'),
+    path('<slug:slug_category>', views.category, name='category-detail'),
 ]

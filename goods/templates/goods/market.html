@@ -5,4 +5,7 @@
 
 {% block content %}
     <h1>Market</h1>
+    {% for category in categories %}
+        <li><a href="{{ category.get_url}}">{{ category.name }}</a></li>
+    {% endfor %}
 {% endblock %}
