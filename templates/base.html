@@ -1,17 +1,25 @@
+{% load static%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
+    <link rel="shortcut icon" type= 'image/png' href="{% static 'pictures/favicon.png' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
     {% block link %}{% endblock %}
 </head>
 <body>
-{% if request.user.is_authenticated %}
-{{ user.profile.user_type }}, {{ user.username }} <a href="{% url 'logout' %}">Exit</a>
-{% else %}
-    <a href="{% url 'sign_up' %}">Sign Up</a> |
-    <a href="{% url 'login' %}">Log In</a>
-{% endif %}
+
+<ul>
+    <li><img class='logo' src="{% static 'pictures/logo.png' %}" alt="AutoShop Garage" width="50" height="50"></li>
+    {% if request.user.is_authenticated %}
+        <li>{{ user.profile.user_type }}, {{ user.username }} |
+        <a href="{% url 'logout' %}">Exit</a></li>
+    {% else %}
+        <li><a class='authorisation' href="{% url 'sign_up' %}">Sign Up</a>
+        <a href="{% url 'login' %}">Log In</a></li>
+    {% endif %}
+</ul>
     <br>
     <a href="{% url 'start-page' %}">START PAGE</a> <br>
     <a href="{% url 'create-card' %}">Create new product card</a> <br>
