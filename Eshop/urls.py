@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 
-admin.site.site_header = 'Eshop'
+admin.site.site_header = 'AutoShop'
 
 urlpatterns = [
     path('admin/', admin.site.urls),

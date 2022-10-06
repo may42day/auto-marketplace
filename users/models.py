@@ -15,9 +15,9 @@ class Profile(models.Model):
 
     def __str__(self):
         if self.user_type == self.CUSTOMER:
-            return 'Customer'
+            return f'Customer {self.user}'
         else:
-            return 'Seller'
+            return f'Seller {self.user}'
 
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):

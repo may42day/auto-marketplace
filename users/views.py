@@ -17,10 +17,6 @@ def sign_up(request):
             user.is_active = True
             user.profile.user_type = profile_form.cleaned_data['user_type']
             user.save()
-
-            # profile_form = ProfileForm(request.POST, instance=user)
-            # profile_form.save()
-
             return HttpResponseRedirect('/')
     else:
         user_form = UserSignUpForm()

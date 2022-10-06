@@ -16,7 +16,7 @@
         <li>{{ user.profile.user_type }}, {{ user.username }} |
         <a href="{% url 'logout' %}">Exit</a></li>
     {% else %}
-        <li><a class='authorisation' href="{% url 'sign_up' %}">Sign Up</a>
+        <li><a class='authorisation' href="{% url 'sign_up' %}">Sign Up</a> |
         <a href="{% url 'login' %}">Log In</a></li>
     {% endif %}
 </ul>
