@@ -1,11 +1,26 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}{{ category.name }}{% endblock %}
 
 
 {% block content %}
     <h1>Category {{ category.name }}</h1>
     {% for product in products %}
-        <li>{{ product.name }}</li>
+        {% if not product.on_moderation %}
+        <div class="product-card">
+            <ul>{{ product.owner }}</ul>
+            <li>{{ product.name }}</li>
+            <li>{{ product.discription }}</li>
+            <li>{{ product.amount }}</li>
+            <li>{{ product.price }} {{ product.currency }}</li>
+            <li>Created: {{ product.created }}</li>
+            <li><a href="{{ category.slug }}/{{ product.id }}">Link</a></li>
+            {% if product.updated != product.created %}
+                <li> Updated: {{ product.updated }}</li>
+            {% endif %}
+            <img src="{{product.picture.url}}" alt="Product Card" width="100" height="100">
+        </div>
+        {% endif %}
+
     {% endfor %}
 {% endblock %}
