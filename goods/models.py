@@ -34,8 +34,10 @@ class Product(models.Model):
         (USD, 'Dollars'),
     ]
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='USD')
+    picture = models.ImageField(upload_to = 'uploads/', verbose_name='Product Image', null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    on_moderation = models.BooleanField(default=True)
 
     def __str__(self):
         return f'{self.category} - {self.name} - {self.owner}'
