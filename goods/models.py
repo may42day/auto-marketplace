@@ -7,7 +7,7 @@ from django.utils.text import slugify
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
-    slug = models.SlugField(default='', null=False, db_index=True)
+    slug = models.SlugField(default='', null=False, blank=True, db_index=True)
 
     def get_url(self):
         return reverse('category-detail', args=[self.slug])
@@ -26,7 +26,7 @@ class Product(models.Model):
     part_number = models.CharField(max_length=30)
     discription = models.TextField()
     amount = models.PositiveIntegerField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(validators=[MinValueValidator(1)], max_digits=10, decimal_places=2)
     EURO = 'EUR'
     USD = 'USD'
     CURRENCY_CHOICES = [
