@@ -5,26 +5,42 @@
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
     <link rel="shortcut icon" type= 'image/png' href="{% static 'pictures/favicon.png' %}">
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+	<link rel="stylesheet" href="{% static 'libs/bootstrap-reboot.min.css' %}">
+	<link rel="stylesheet" href="{% static 'libs/bootstrap-grid.min.css' %}">
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% block link %}{% endblock %}
 </head>
 <body>
 
-<ul>
-    <li><img class='logo' src="{% static 'pictures/logo.png' %}" alt="AutoShop Garage" width="50" height="50"></li>
-    {% if request.user.is_authenticated %}
-        <li>{{ user.profile.user_type }}, {{ user.username }} |
-        <a href="{% url 'logout' %}">Exit</a></li>
-    {% else %}
-        <li><a class='authorisation' href="{% url 'sign_up' %}">Sign Up</a> |
-        <a href="{% url 'login' %}">Log In</a></li>
-    {% endif %}
-</ul>
-    <br>
-    <a href="{% url 'start-page' %}">START PAGE</a> <br>
-    <a href="{% url 'create-card' %}">Create new product card</a> <br>
-    <a href="{% url 'market' %}">Visit market</a> <br>
-    <a href="{% url 'moderation' %}">moderation</a>
+
+<nav class="navbar">
+    <div class="container">
+        <a href="{% url 'start-page' %}" class="navbar-logo">AUTOSHOP</a>
+<!--        <img class='logo' src="{% static 'pictures/logo.png' %}" alt="AutoShop Garage" width="50" height="50">-->
+        <div class="navbar-wrap">
+            <ul class="navbar-menu">
+                {% if request.user.is_authenticated %}
+                    <li><a href="{% url 'moderation' %}">Moderation</a></li>
+                    <li><a href="{% url 'market' %}">Market</a></li>
+                    <li><a href="{% url 'create-card' %}">New product</a</li>
+                    <li><a href="#">{{ user.profile.user_type }},  {{ user.username }}</a></li>
+                    <li><a href="{% url 'logout' %}">Exit</a></li>
+                {% else %}
+
+                    <li><a href="{% url 'login' %}">Log In</a></li>
+                {% endif %}
+            </ul>
+            {% if not request.user.is_authenticated %}
+            <a href="{% url 'sign_up' %}" class="register">Sign Up</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+
 {% block content %}{% endblock %}
 </body>
 </html>
