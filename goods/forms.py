@@ -10,3 +10,5 @@ class NewCardForm(forms.ModelForm):
         super(NewCardForm, self).__init__(*args, **kwargs)
         self.fields['picture'].required = False
 
+
+
