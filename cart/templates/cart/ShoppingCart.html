@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Shopping cart{% endblock %}
+
+
+{% block content %}
+    <h1>Shopping cart</h1>
+    <table class="shopping-cart">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Product name</th>
+                <th>Quantity</th>
+                <th></th>
+                <th></th>
+                <th>Price</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart %}
+                {% with item.product as product %}
+                <tr>
+                    <td>
+                        <a href="{{ product.get_url }}">
+                            <img src="{{product.picture.url}}" alt="Product Card" width="100" height="100">
+                        </a>
+                    </td>
+                    <td>{{product.name}}</td>
+                    <td>
+                        <form action="{% url 'cart:add_to_cart' product.id %}" method="post">
+                            {% csrf_token %}
+                            {{ item.update_amount_form.amount }}
+                            {{ item.update_amount_form.update }}
+                            <input type="submit" value="Update">
+                        </form>
+                    </td>
+                    <td><a href="{% url 'cart:remove_from_cart' product.id %}">Delete</a></td>
+                    <td>{{ item.amount }}</td>
+                    <td>{{ item.price }}</td>
+                    <td>{{ item.total_price }}</td>
+                </tr>
+                {% endwith %}
+            {% endfor %}
+            <tr class="total">
+                <td>Total</td>
+                <td colspan="4"></td>
+                <td>{{ cart.get_total_price }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+
+
+{% endblock %}

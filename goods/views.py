@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from .models import Category, Product, ShoppingCart
 from .forms import NewCardForm
+from cart.forms import AddToCartForm
 
 def create_product_card(request):
     if request.method == 'POST':
@@ -32,18 +33,16 @@ def market(request):
 def category(request, slug_category:str):
     category = get_object_or_404(Category, slug=slug_category)
     products = Product.objects.filter(category=category.id)
+    add_to_cart_form = AddToCartForm()
     return render(request, 'goods/category.html', context={
         'category':category,
         'products':products,
+        'cart_form': add_to_cart_form,
     })
+
 
 def products_on_moderation(request):
     products = Product.objects.filter(on_moderation=True)
     return render(request, 'goods/ad_moderation.html', context={
         'products': products,
     })
-
-#@require_POST
-def add_to_shopping_cart(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-    ShoppingCart.objects.create(user=request.user, product=product, amount=1)
