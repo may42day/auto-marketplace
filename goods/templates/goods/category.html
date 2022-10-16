@@ -15,6 +15,7 @@
             <li>{{ product.price }} {{ product.currency }}</li>
             <li>Created: {{ product.created }}</li>
             <li><a href="{{ category.slug }}/{{ product.id }}">Link</a></li>
+            <a href="{% url 'cart_add' product.id %}">Add to shopping cart</a>
             {% if product.updated != product.created %}
                 <li> Updated: {{ product.updated }}</li>
             {% endif %}

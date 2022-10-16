@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from .models import Category, Product
+from .models import Category, Product, ShoppingCart
 from .forms import NewCardForm
 
 def create_product_card(request):
@@ -42,3 +42,8 @@ def products_on_moderation(request):
     return render(request, 'goods/ad_moderation.html', context={
         'products': products,
     })
+
+#@require_POST
+def add_to_shopping_cart(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    ShoppingCart.objects.create(user=request.user, product=product, amount=1)
