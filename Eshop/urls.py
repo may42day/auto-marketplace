@@ -9,7 +9,8 @@ admin.site.index_title = 'Admin panel'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('users.urls')),
     path('market/', include('goods.urls')),
+    path('cart/', include(('cart.urls', 'cart'), namespace='cart')),
+    path('', include('users.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

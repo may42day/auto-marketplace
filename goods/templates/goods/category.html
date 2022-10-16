@@ -15,11 +15,18 @@
             <li>{{ product.price }} {{ product.currency }}</li>
             <li>Created: {{ product.created }}</li>
             <li><a href="{{ category.slug }}/{{ product.id }}">Link</a></li>
-            <a href="{% url 'cart_add' product.id %}">Add to shopping cart</a>
+
             {% if product.updated != product.created %}
                 <li> Updated: {{ product.updated }}</li>
             {% endif %}
             <img src="{{product.picture.url}}" alt="Product Card" width="100" height="100">
+
+            <form action="{% url 'cart:add_to_cart' product.id %}" method="post">
+                {% csrf_token %}
+                {{ cart_form }}
+                <input type="submit" value="Add to cart">
+            </form>
+
         </div>
         {% endif %}
 

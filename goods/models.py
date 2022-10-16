@@ -42,6 +42,9 @@ class Product(models.Model):
     def __str__(self):
         return f'{self.category} - {self.name} - {self.owner}'
 
+    def get_url(self):
+        return f'{self.category.slug }/{ self.id }'
+
 
 class ShoppingCart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
