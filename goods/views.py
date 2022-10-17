@@ -6,12 +6,13 @@ from cart.forms import AddToCartForm
 
 def create_product_card(request):
     if request.method == 'POST':
-        card_form = NewCardForm(request.POST)
+        card_form = NewCardForm(request.POST, request.FILES)
         if card_form.is_valid():
             product = card_form.save(commit=False)
             product.owner = request.user
             product.save()
-            return HttpResponseRedirect('/')
+
+            return HttpResponseRedirect(f'{product.get_url()}')
     else:
         card_form = NewCardForm()
     return render(request, 'goods/new_product_card.html', context={
