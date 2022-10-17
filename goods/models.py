@@ -40,6 +40,7 @@ class Product(models.Model):
     on_moderation = models.BooleanField(default=True)
 
     def __str__(self):
+
         return f'{self.category} - {self.name} - {self.owner}'
 
     def get_url(self):

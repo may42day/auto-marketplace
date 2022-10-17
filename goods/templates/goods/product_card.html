@@ -5,6 +5,10 @@
 
 {% block content %}
     <h1> Product card </h1>
+    {% if product.on_moderation %}
+        <ul>Your product card was submitted and will be reviewed by a moderator before
+            being visible to all users. This post is currently awaiting for a moderator to review.</ul>
+    {% endif %}
     <ul>Owner: {{ product.owner }}</ul>
     <li>Product name: {{ product.name }}</li>
     <li>Discription: {{ product.discription }}</li>

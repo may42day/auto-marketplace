@@ -8,7 +8,7 @@
 {% block content %}
     <h1>Create new product card</h1>
 
- <form method="post">
+ <form enctype="multipart/form-data" method="post">
         {% csrf_token %}
         {% for field in card_form %}
             <div class="form-style {% if field.errors %} errors {% endif %}">
