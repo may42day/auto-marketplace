@@ -1,9 +1,10 @@
 from django.urls import path, include
-from .views import start_page, sign_up
+from .views import index, sign_up, seller_products
 
 urlpatterns = [
-    path('', start_page, name='start-page'),
-    path('sign_up', sign_up, name='sign_up')
+    path('', index, name='index'),
+    path('my_products', seller_products, name='my_products'),
+    path('sign_up', sign_up, name='sign_up'),
 ]
 
 urlpatterns += [

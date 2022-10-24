@@ -2,9 +2,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .forms import UserSignUpForm, ProfileForm
+from goods.models import Product
 
-def start_page(request):
-    return render(request, 'users/start_page.html')
+def index(request):
+    return render(request, 'users/index.html')
 
 
 def sign_up(request):
@@ -25,3 +26,11 @@ def sign_up(request):
         'user_form':user_form,
         'profile_form':profile_form,
     })
+
+
+def seller_products(request):
+    products = Product.objects.filter(owner=request.user)
+    return render(request, 'users/SellerProducts.html', context={
+            'products': products,
+
+        })

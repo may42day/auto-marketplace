@@ -93,32 +93,38 @@ body {
 }
 
 .image img {
-    height: 150;
+    height: 200px;
     width: 100%;
     object-fit: cover;
-    border-radus: 5px;
+    border-radius: 5px;
 }
 
 .info h3{
-    font-size: 18px;
+    font-size: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    color:#003087;
+    height:40px;
+    text-align: top-left;
 }
 
-.info-price{
-    display: flex;
-    flex-flow: row nowrap;
-    justify-self: space-between;
-    margin-top: 10px;
-}
-
-.price{
-    font-weight: 700;
-    font-size: 18px;
-
+.info a{
+    text-decoration: none;
 }
 
 .available{
-
+  font-size: 12px;  
+  display: inline-block;
 }
+
+.price {
+  font-weight: 700;
+  font-size: 14px;  
+  display: inline-block;
+}
+
 
 .add-to-cart{
     border: none;
