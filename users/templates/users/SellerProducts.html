@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}My products{% endblock %}
+
+
+{% block content %}
+    <h1>My products</h1>
+
+    <div class="container mt-5">
+        <div class="row">
+            {% for product in products %}
+                {% if not product.on_moderation %}
+                    <div class="col-md-4">
+                        <div class="product">
+                            <div class="image">
+                                <img src="{{product.picture.url}}" alt="{{ product.name }}" width="300" height="200">
+                            </div>
+                            <div class="info">
+                                <a href="market/{{ product.category.slug }}/{{ product.id }}"><h3>{{ product.name }}</h3></a>
+                                <div>
+                                    <span class="price">{{ product.price }} <small>{{ product.currency }}</small></span>
+                                </div>
+                                <span class="available">{{ product.amount }} qty available</span>
+                                <div class="add-to-cart">
+                                    <form action="{% url 'cart:add_to_cart' product.id %}" method="post">
+                                        {% csrf_token %}
+                                        {{ cart_form }}
+                                        <input type="submit" value="Add to cart">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

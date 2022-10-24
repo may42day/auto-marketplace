@@ -7,60 +7,26 @@
     <h1>Category {{ category.name }}</h1>
 
     <div class="container mt-5">
-                <div class="row">
-                    {% for product in products %}
-                        {% if not product.on_moderation %}                    
-                            <div class="col-md-4">                        
-                                    <div class="product">
-                                        <div class="image">                               
-                                            <img src="{{product.picture.url}}" alt="{{ product.name }}" width="300" height="200">
-                                        </div>
-                                        <div class="info">
-                                            <h3>{{ product.name }}</h3>
-                                            <div>
-                                                <div class="info-price">
-                                                    <span class="available">{{ product.amount }} qty available</span>
-                                                    <span class="price">{{ product.price }} <small>{{ product.currency }}</small></span>
-                                                </div>                                                
-                                                <div class="add-to-cart">
-                                                    <form action="{% url 'cart:add_to_cart' product.id %}" method="post">
-                                                        {% csrf_token %}
-                                                        {{ cart_form }}
-                                                        <input type="submit" value="Add to cart">
-                                                    </form>
-                                                </div>                               
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>       
-                        {% endif %}
-                    {% endfor %}                           
-                </div>
-            </div>    
-
-<!--     {% for product in products %}
-        {% if not product.on_moderation %}
-        <div class="product-card">
-            <ul>{{ product.owner }}</ul>
-            <li>{{ product.name }}</li>
-            <li>{{ product.discription }}</li>
-            <li>{{ product.amount }}</li>
-            <li>{{ product.price }} {{ product.currency }}</li>
-            <li>Created: {{ product.created }}</li>
-            <li><a href="{{ category.slug }}/{{ product.id }}">Link</a></li>
-
-            {% if product.updated != product.created %}
-                <li> Updated: {{ product.updated }}</li>
-            {% endif %}
-            
-
-            <form action="{% url 'cart:add_to_cart' product.id %}" method="post">
-                {% csrf_token %}
-                {{ cart_form }}
-                <input type="submit" value="Add to cart">
-            </form>
-
+        <div class="row">
+            {% for product in products %}
+                {% if not product.on_moderation %}                    
+                    <div class="col-md-4">                        
+                        <div class="product">
+                            <div class="image">                               
+                                <img src="{{product.picture.url}}" alt="{{ product.name }}" width="300" height="200">
+                            </div>
+                            <div class="info">
+                                <a href="{{ category.slug }}/{{ product.id }}"><h3>{{ product.name }}</h3></a>
+                                <div>
+                                    <span class="price">{{ product.price }} <small>{{ product.currency }}</small></span>
+                                </div>                                            
+                                <span class="available">{{ product.amount }} qty available</span>
+                            </div>
+                        </div>
+                    </div>
+                           
+                {% endif %}
+            {% endfor %}                           
         </div>
-        {% endif %}
-    {% endfor %}
-{% endblock %} -->
+    </div>   
+{% endblock %}

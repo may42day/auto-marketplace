@@ -18,11 +18,12 @@
 
 <nav class="navbar">
     <div class="container">
-        <a href="{% url 'start-page' %}" class="navbar-logo">AUTOSHOP</a>
+        <a href="{% url 'index' %}" class="navbar-logo">AUTOSHOP</a>
 <!--        <img class='logo' src="{% static 'pictures/logo.png' %}" alt="AutoShop Garage" width="50" height="50">-->
         <div class="navbar-wrap">
             <ul class="navbar-menu">
                 {% if request.user.is_authenticated %}
+                    <li><a href="{% url 'my_products' %}">My products</a></li>
                     <li><a href="{% url 'moderation' %}">Moderation</a></li>
                     <li><a href="{% url 'market' %}">Market</a></li>
                     <li><a href="{% url 'create-card' %}">New product card</a></li>

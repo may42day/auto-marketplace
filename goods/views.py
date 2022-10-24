@@ -3,6 +3,18 @@ from django.shortcuts import render, get_object_or_404
 from .models import Category, Product, ShoppingCart
 from .forms import NewCardForm
 from cart.forms import AddToCartForm
+from django.views.generic import ListView, DeleteView
+
+
+class MarketPage(ListView):
+    model = Category
+    template_name = 'goods/market.html'
+    context_object_name = 'categories'
+
+class ProductCard(DeleteView):
+    model = Product
+    template_name = 'goods/product_card.html'
+    pk_url_kwarg = 'product_id'
 
 def create_product_card(request):
     if request.method == 'POST':
@@ -17,17 +29,6 @@ def create_product_card(request):
         card_form = NewCardForm()
     return render(request, 'goods/new_product_card.html', context={
         'card_form':card_form,
-    })
-
-def product_card(request, slug_category:str, product_id:int):
-    product = get_object_or_404(Product, id=product_id)
-    return render(request, 'goods/product_card.html', context={
-        'product':product,
-    })
-def market(request):
-    categories = Category.objects.all()
-    return render(request, 'goods/market.html', context={
-        'categories':categories
     })
 
 
