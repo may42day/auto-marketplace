@@ -4,9 +4,9 @@ from django.db.models import  QuerySet
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'category', 'owner', 'amount', 'price', 'currency', 'on_moderation']
+    list_display = ['name', 'category', 'user', 'amount', 'price', 'currency', 'on_moderation']
     list_editable = ['category', 'on_moderation']
-    ordering = ['category', 'owner', 'on_moderation']
+    ordering = ['category', 'user', 'on_moderation']
     actions = ['set_moderation_approval']
     list_per_page = 20
     search_fields = ['name']

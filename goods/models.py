@@ -19,9 +19,13 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+
+def user_directory_path(instance, filename):
+    return 'uploads/user_{0}/{1}'.format(instance.user.id, filename)
+
 class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=80)
     part_number = models.CharField(max_length=30)
     discription = models.TextField()
@@ -34,7 +38,7 @@ class Product(models.Model):
         (USD, 'Dollars'),
     ]
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='USD')
-    picture = models.ImageField(upload_to = 'uploads/', verbose_name='Product Image', null=True, blank=True)
+    picture = models.ImageField(upload_to = user_directory_path, verbose_name='Product Image', null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     on_moderation = models.BooleanField(default=True)
