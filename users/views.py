@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render
 from .forms import UserSignUpForm, ProfileForm
 from goods.models import Product
@@ -34,3 +34,6 @@ def seller_products(request):
             'products': products,
 
         })
+
+# def pageNotFound(request, exception):
+#     return HttpResponseNotFound('users/404.html')
