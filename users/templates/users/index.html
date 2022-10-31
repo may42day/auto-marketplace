@@ -10,8 +10,12 @@
                 <h1 class="sp-h1">AutoLand</h1>
                 <h2 class="sp-h2">Marketplace where you can buy and sell auto parts</h2>
                 <div class="sp-but">
-                    <a class="sp-signup-button btn btn-primary"href="{% url 'sign_up' %}" class="register">Sign Up</a>
-                    <a class="sp-login-button btn btn-secondary" href="{% url 'login' %}">Log In</a>
+                    {% if not request.user.is_authenticated %}
+                        <a class="sp-signup-button btn btn-primary"href="{% url 'sign_up' %}" class="register">Sign Up</a>
+                        <a class="sp-login-button btn btn-secondary" href="{% url 'login' %}">Log In</a>
+                    {% else %}
+                        <a class="sp-login-button btn btn-primary" href="{% url 'market' %}">Visit market</a>
+                    {% endif %}
                 </div>
                 <form class="d-flex" role="search">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
