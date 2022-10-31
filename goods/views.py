@@ -21,7 +21,7 @@ def create_product_card(request):
         card_form = NewCardForm(request.POST, request.FILES)
         if card_form.is_valid():
             product = card_form.save(commit=False)
-            product.owner = request.user
+            product.user = request.user
             product.save()
 
             return HttpResponseRedirect(f'{product.get_url()}')
