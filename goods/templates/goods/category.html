@@ -4,29 +4,51 @@
 
 
 {% block content %}
-    <h1>Category {{ category.name }}</h1>
+<table class="category-table">
+        <tbody>
+            <tr>
+                <td class="categories-sidebar">
+                    <ul>
+                        {% for category in categories %}
+                            <li {% if category == current_category %}class="selected"{% endif %}>
+                                <a href="{{ category.slug }}">{{ category }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td class="categories-content">
+                    <div class="container mt-5">
+                        <div class="row">
+                            {% if products %}
+                            {% for product in products %}
+                            {% if not product.on_moderation %}
+                            <div class="col-md-4">
+                                <div class="product">
+                                    <div class="image">
+                                        <img src="{{product.picture.url}}" alt="{{ product.name }}" width="300" height="200">
+                                    </div>
+                                    <div class="info">
+                                        <a href="{{ category.slug }}/{{ product.id }}"><h3>{{ product.name }}</h3></a>
+                                        <div>
+                                            <span class="price">{{ product.price }} <small>{{ product.currency }}</small></span>
+                                        </div>
+                                        <span class="available">{{ product.amount }} qty available</span>
+                                    </div>
+                                </div>
+                            </div>
 
-    <div class="container mt-5">
-        <div class="row">
-            {% for product in products %}
-                {% if not product.on_moderation %}                    
-                    <div class="col-md-4">                        
-                        <div class="product">
-                            <div class="image">                               
-                                <img src="{{product.picture.url}}" alt="{{ product.name }}" width="300" height="200">
-                            </div>
-                            <div class="info">
-                                <a href="{{ category.slug }}/{{ product.id }}"><h3>{{ product.name }}</h3></a>
-                                <div>
-                                    <span class="price">{{ product.price }} <small>{{ product.currency }}</small></span>
-                                </div>                                            
-                                <span class="available">{{ product.amount }} qty available</span>
-                            </div>
+                            {% endif %}
+                            {% endfor %}
+                            {% else %}
+                                <div class="container mt-5">
+                                    <h1>No products available</h1>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
-                           
-                {% endif %}
-            {% endfor %}                           
-        </div>
-    </div>   
+                </td>
+            </tr>
+        </tbody>
+    </table>
 {% endblock %}
+

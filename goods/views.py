@@ -33,11 +33,13 @@ def create_product_card(request):
 
 
 def category(request, slug_category:str):
-    category = get_object_or_404(Category, slug=slug_category)
-    products = Product.objects.filter(category=category.id)
+    categories = Category.objects.all()
+    current_category = get_object_or_404(Category, slug=slug_category)
+    products = Product.objects.filter(category=current_category.id)
     add_to_cart_form = AddToCartForm()
     return render(request, 'goods/category.html', context={
-        'category':category,
+        'categories':categories,
+        'current_category':current_category,
         'products':products,
         'cart_form': add_to_cart_form,
     })
