@@ -4,10 +4,13 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.urls import reverse
 from django.utils.text import slugify
 
+def category_directory_path(instance, filename):
+    return 'uploads/categories_pictures/{0}'.format(filename)
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(default='', null=False, blank=True, db_index=True)
+    picture = models.ImageField(upload_to=category_directory_path, verbose_name='Category Image', null=True, blank=True)
 
     def get_url(self):
         return reverse('category-detail', args=[self.slug])

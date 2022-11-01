@@ -191,6 +191,7 @@
 .categories-sidebar ul li a {
 	color: #444;
 	text-decoration: none;
+	display: block;
 }
 
 .categories-sidebar ul li.selected {
@@ -205,4 +206,40 @@
 
 .categories-content{
     min-height: 100%;
+    vertical-align: top;
+
+}
+
+.category-card{
+    border-radius: 1em;
+    text-align: center;
+}
+
+.category-card:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+
+.category-card a{
+    display: inline-block;
+    color: #056fb7;
+    text-decoration: none;
+    transition: all .07s ease-in-out;
+    text-align: center;
+}
+
+.category-card a:hover {
+    color: #003087;
+}
+
+.category-img{
+    height:20%;
+    width: 50%;
+    margin: auto;
+}
+
+.cat-name{
+
+    font-weight: 500;
+    font-size: 18px;
 }

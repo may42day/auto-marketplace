@@ -16,10 +16,10 @@
                         {% endfor %}
                     </ul>
                 </td>
-                <td class="categories-content">
+                {% if products %}
+                <td class="categories-content" valign="top">
                     <div class="container mt-5">
                         <div class="row">
-                            {% if products %}
                             {% for product in products %}
                             {% if not product.on_moderation %}
                             <div class="col-md-4">
@@ -36,17 +36,18 @@
                                     </div>
                                 </div>
                             </div>
-
                             {% endif %}
                             {% endfor %}
-                            {% else %}
-                                <div class="container mt-5">
-                                    <h1>No products available</h1>
-                                </div>
-                            {% endif %}
                         </div>
                     </div>
                 </td>
+                {% else %}
+                <td valign="top">
+                    <div class="container mt-5">
+                        <h2>No products available</h2>
+                    </div>
+                </td>
+                {% endif %}
             </tr>
         </tbody>
     </table>
