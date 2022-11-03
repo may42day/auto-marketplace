@@ -17,8 +17,8 @@
                         <a class="sp-login-button btn btn-primary" href="{% url 'market' %}">Visit market</a>
                     {% endif %}
                 </div>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <form class="d-flex" role="search" action="{% url 'search' %}">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
                     <button class="btn btn-outline-dark" type="submit">Search</button>
                 </form>
             </div>

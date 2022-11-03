@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ category.name }}{% endblock %}
+
+
+{% block content %}
+<table class="category-table">
+        <tbody>
+            <tr>
+                <td class="categories-content" valign="top">
+                    <div class="container mt-5">
+                        <div class="row">
+                            {% if products %}
+                            {% for product in products %}
+                            {% if not product.on_moderation %}
+                            <div class="col-md-4">
+                                <div class="product">
+                                    <div class="image">
+                                        <img src="{{product.picture.url}}" alt="{{ product.name }}" width="300" height="200">
+                                    </div>
+                                    <div class="info">
+                                        <a href="{{ category.slug }}/{{ product.id }}"><h3>{{ product.name }}</h3></a>
+                                        <div>
+                                            <span class="price">{{ product.price }} <small>{{ product.currency }}</small></span>
+                                        </div>
+                                        <span class="available">{{ product.amount }} qty available</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                            {% else %}
+                            <td valign="top">
+                                <div class="container mt-5">
+                                    <h2>No products available</h2>
+                                </div>
+                            </td>
+                            {% endif %}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}
+
