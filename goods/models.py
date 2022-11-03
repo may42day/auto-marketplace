@@ -48,7 +48,7 @@ class Product(models.Model):
 
     def __str__(self):
 
-        return f'{self.category} - {self.name} - {self.owner}'
+        return f'{self.category} - {self.name} - {self.user}'
 
     def get_url(self):
         return f'{self.category.slug }/{ self.id }'

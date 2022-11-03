@@ -44,9 +44,13 @@
                         {{ user.profile.user_type }}, {{ user.username }}
                     </a>
                     <ul class="dropdown-menu">
+                        {% if user.profile.user_type == 'Customer' %}
                         <li><a class="dropdown-item" href="{% url 'cart:cart_detail' %}">Cart</a></li>
+                        <li><a class="dropdown-item" href="#">Purchase history</a></li>
+                        {% else %}
                         <li><a class="dropdown-item" href="{% url 'my_products' %}">My products</a></li>
                         <li><a class="dropdown-item" href="{% url 'create-card' %}">New product card</a></li>
+                        {% endif %}
                     </ul>
                 </li>
                 <li class="nav-item">
@@ -54,6 +58,9 @@
                 </li>
 
             {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'market' %}">Market</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'login' %}">Log In</a>
                 </li>

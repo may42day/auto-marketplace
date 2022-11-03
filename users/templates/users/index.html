@@ -14,7 +14,7 @@
                         <a class="sp-signup-button btn btn-primary"href="{% url 'sign_up' %}" class="register">Sign Up</a>
                         <a class="sp-login-button btn btn-secondary" href="{% url 'login' %}">Log In</a>
                     {% else %}
-                        <a class="sp-login-button btn btn-primary" href="{% url 'market' %}">Visit market</a>
+                        <a class="sp-login-button btn btn-primary" href="{% url 'market' %}">Market</a>
                     {% endif %}
                 </div>
                 <form class="d-flex" role="search" action="{% url 'search' %}">

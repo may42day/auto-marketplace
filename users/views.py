@@ -1,8 +1,9 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponseNotFound
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .forms import UserSignUpForm, ProfileForm
 from goods.models import Product
+
 
 def index(request):
     return render(request, 'users/index.html')
@@ -28,12 +29,11 @@ def sign_up(request):
     })
 
 
+@login_required
 def seller_products(request):
-    products = Product.objects.filter(owner=request.user)
+    products = Product.objects.filter(user=request.user)
     return render(request, 'users/SellerProducts.html', context={
             'products': products,
 
         })
 
-# def pageNotFound(request, exception):
-#     return HttpResponseNotFound('users/404.html')
