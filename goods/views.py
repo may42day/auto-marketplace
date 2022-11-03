@@ -50,3 +50,13 @@ def products_on_moderation(request):
     return render(request, 'goods/ad_moderation.html', context={
         'products': products,
     })
+
+
+def search(request):
+    search = request.GET.get('search', '')
+    if search:
+        products = Product.objects.filter(name__icontains=search).order_by('-created')
+        return render(request, 'goods/search.html', context={
+            'products':products,
+        })
+    return HttpResponseRedirect('/')

@@ -1,8 +1,9 @@
 from django.urls import path, include
-from .views import MarketPage, create_product_card, products_on_moderation, category, ProductCard
+from .views import *
 
 urlpatterns = [
     path('', MarketPage.as_view(), name='market'),
+    path('search', search, name='search'),
     path('create', create_product_card, name='create-card'),
     path('moderation', products_on_moderation, name='moderation'),
     path('<slug:slug_category>', category, name='category-detail'),
