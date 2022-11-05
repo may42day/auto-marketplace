@@ -12,7 +12,7 @@ class Category(models.Model):
     slug = models.SlugField(default='', db_index=True)
     picture = models.ImageField(upload_to=category_directory_path, verbose_name='Category Image', null=True, blank=True)
 
-    def get_url(self):
+    def get_absolute_url(self):
         return reverse('category-detail', args=[self.slug])
 
     def save(self, *args, **kwargs):
@@ -33,6 +33,12 @@ class Subcategory(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super(Subcategory, self).save(*args,**kwargs)
+
+    def get_absolute_url(self):
+        return reverse('subcategory-detail', kwargs={
+            'slug_category':self.category.slug,
+            'slug_subcategory':self.slug,
+        })
 
 def user_directory_path(instance, filename):
     return 'uploads/user_{0}/{1}'.format(instance.user.id, filename)
