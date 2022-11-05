@@ -9,7 +9,7 @@ def category_directory_path(instance, filename):
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
-    slug = models.SlugField(default='', null=False, blank=True, db_index=True)
+    slug = models.SlugField(default='', db_index=True)
     picture = models.ImageField(upload_to=category_directory_path, verbose_name='Category Image', null=True, blank=True)
 
     def get_url(self):
@@ -23,11 +23,23 @@ class Category(models.Model):
         return self.name
 
 
+class Subcategory(models.Model):
+    name = models.CharField(max_length=100)
+    slug = models.SlugField(default='', db_index=True)
+    category = models.ForeignKey(Category, related_name='subcategories', on_delete=models.PROTECT)
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Subcategory, self).save(*args,**kwargs)
+
 def user_directory_path(instance, filename):
     return 'uploads/user_{0}/{1}'.format(instance.user.id, filename)
 
 class Product(models.Model):
-    category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, related_name='products', on_delete=models.PROTECT)
+    subcategory = models.ForeignKey(Subcategory, related_name='products', on_delete=models.PROTECT)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=80)
     part_number = models.CharField(max_length=30)
