@@ -4,15 +4,14 @@ from django.shortcuts import render, get_object_or_404
 from .models import *
 from .forms import *
 from cart.forms import AddToCartForm
-from django.views.generic import ListView, DeleteView
-
+from django.views.generic import ListView, DeleteView, DetailView
 
 class MarketPage(ListView):
     model = Category
     template_name = 'goods/market.html'
     context_object_name = 'categories'
 
-class ProductCard(DeleteView):
+class ProductCard(DetailView):
     model = Product
     template_name = 'goods/product_card.html'
     pk_url_kwarg = 'product_id'
@@ -54,11 +53,11 @@ def category(request, slug_category:str):
         products = Product.objects.filter(category=current_category.id, amount__gt=stock).order_by(order_param)
     else:
         products = Product.objects.filter(category=current_category.id).order_by('-created')
-    #add_to_cart_form = AddToCartForm()
+    add_to_cart_form = AddToCartForm()
     return render(request, 'goods/category.html', context={
         'current_category':current_category,
         'products':products,
-        #'cart_form': add_to_cart_form,
+        'cart_form': add_to_cart_form,
         'filters_form': filters_form,
     })
 

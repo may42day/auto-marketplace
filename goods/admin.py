@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import *
-from django.db.models import  QuerySet
+from django.db.models import QuerySet
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):

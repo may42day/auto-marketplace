@@ -35,7 +35,7 @@
                                         <img src="{{product.picture.url}}" alt="{{ product.name }}" width="300" height="200">
                                     </div>
                                     <div class="info">
-                                        <a href="{{ product.category.slug }}/{{ product.id }}"><h3>{{ product.name }}</h3></a>
+                                        <a href="{{ product.get_absolute_url }}"><h3>{{ product.name }}</h3></a>
                                         <div>
                                             <span class="price">{{ product.price }} <small>{{ product.currency }}</small></span>
                                         </div>

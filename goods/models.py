@@ -63,13 +63,17 @@ class Product(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     on_moderation = models.BooleanField(default=True)
+    average_rating = models.DecimalField(validators=[MinValueValidator(0), MaxValueValidator(5)], max_digits=2, decimal_places=1)
 
     def __str__(self):
 
         return f'{self.category} - {self.name} - {self.user}'
 
-    def get_url(self):
-        return f'{self.category.slug }/{ self.id }'
+    def get_absolute_url(self):
+        return reverse('product-card', kwargs={
+            'slug_category': self.category.slug,
+            'product_id': self.pk,
+        })
 
 
 class ShoppingCart(models.Model):

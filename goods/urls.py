@@ -7,7 +7,8 @@ urlpatterns = [
     path('create', create_product_card, name='create-card'),
     path('moderation', products_on_moderation, name='moderation'),
     path('<slug:slug_category>', category, name='category-detail'),
-    path('<slug:slug_category>/<slug:slug_subcategory>', subcategory, name='subcategory-detail'),
     path('<slug:slug_category>/<int:product_id>', ProductCard.as_view(), name='product-card'),
+    path('<slug:slug_category>/<slug:slug_subcategory>', subcategory, name='subcategory-detail'),
+
 
 ]
