@@ -35,7 +35,7 @@ class Subcategory(models.Model):
         super(Subcategory, self).save(*args,**kwargs)
 
     def get_absolute_url(self):
-        return reverse('subcategory-detail', kwargs={
+        return reverse('category-detail', kwargs={
             'slug_category':self.category.slug,
             'slug_subcategory':self.slug,
         })
