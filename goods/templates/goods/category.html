@@ -12,6 +12,9 @@
 
                 <td class="categories-content" valign="top">
                     <div class="container mt-5">
+                        {% if current_subcategory %}
+                            <h1>{{ current_subcategory }}</h1>
+                        {% endif %}
                         {% if products %}
                         <div class="search-filters">
                             <form  method="get">
@@ -39,6 +42,19 @@
                                             <span class="price">{{ product.price }} <small>{{ product.currency }}</small></span>
                                         </div>
                                         <span class="available">{{ product.amount }} qty available</span>
+                                        <div class="feedback-stars">
+                                            {% for star in 12545|make_list %}
+                                                {% if forloop.counter <= product.average_rating %}
+                                                    <ion-icon name="star"></ion-icon>
+                                                {% else %}
+                                                    <ion-icon name="star-outline"></ion-icon>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+<!--                                        <form class="add_to_cart" action="{% url 'cart:add_to_cart' product.pk %}" method="post">-->
+<!--                                        {% csrf_token %}-->
+<!--                                        {{ cart_form }}-->
+<!--                                        </form>-->
                                     </div>
                                 </div>
                             </div>
@@ -57,5 +73,8 @@
             </tr>
         </tbody>
     </table>
+
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 {% endblock %}
 

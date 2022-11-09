@@ -1,4 +1,3 @@
-<br>
 <form action="{% url 'feedback:add_feedback' product_pk %}" method="post">
     {% csrf_token %}
     {{ feedback_form }}

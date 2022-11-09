@@ -26,7 +26,7 @@ def create_product_card(request):
             product.user = request.user
             product.save()
 
-            return HttpResponseRedirect(f'{product.get_url()}')
+            return HttpResponseRedirect(f'{product.get_absolute_url()}')
     else:
         card_form = NewCardForm()
     return render(request, 'goods/new_product_card.html', context={
@@ -39,7 +39,7 @@ order_param_dict = {
     'CHEAP':'price',
     'EXPENSIVE':'-price',
 }
-def category(request, slug_category:str):
+def category(request, slug_category:str, slug_subcategory=None):
     current_category = get_object_or_404(Category, slug=slug_category)
 
     filters_form = SearchFiltersForm(request.GET)
@@ -54,32 +54,15 @@ def category(request, slug_category:str):
     else:
         products = Product.objects.filter(category=current_category.id).order_by('-created')
     add_to_cart_form = AddToCartForm()
+    current_subcategory = None
+    if slug_subcategory:
+        current_subcategory = get_object_or_404(Subcategory, slug=slug_subcategory)
     return render(request, 'goods/category.html', context={
         'current_category':current_category,
         'products':products,
         'cart_form': add_to_cart_form,
         'filters_form': filters_form,
-    })
-
-def subcategory(request, slug_category:str, slug_subcategory:str):
-    current_subcategory = get_object_or_404(Subcategory, slug=slug_subcategory)
-    current_category = get_object_or_404(Category, slug=slug_category)
-    filters_form = SearchFiltersForm(request.GET)
-    if request.GET:
-        new_param = request.GET['search_filter']
-        order_param = order_param_dict[new_param]
-        if 'stock_availability' in request.GET:
-            stock = 0
-        else:
-            stock = -1
-        products = Product.objects.filter(subcategory=current_subcategory.id, amount__gt=stock).order_by(order_param)
-    else:
-        products = Product.objects.filter(subcategory=current_subcategory.id).order_by('-created')
-    return render(request, 'goods/subcategory.html', context={
-        'current_subcategory':current_subcategory,
-        'current_category':current_category,
-        'products':products,
-        'filters_form': filters_form,
+        'current_subcategory':current_subcategory
     })
 
 

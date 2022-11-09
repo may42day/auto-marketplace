@@ -23,4 +23,20 @@
 
     {% show_feedback_form product_pk=product.pk  %}
 
+    <div class="feedbacks">
+    {% for feedback in product.feedback.all %}
+        <div class="feedback">
+            <h4>{{ feedback.user }} - {{ feedback.rating }}</h4>
+            <h5>{{ feedback.date }}</h5>
+            <p>{{ feedback.text }}</p>
+            {% if feedback.user == request.user or request.user.is_staff %}
+                <a href="{% url 'feedback:remove_feedback' feedback.pk %}">delete feedback</a>
+            {% endif %}
+
+        </div>
+        <br>
+    {% endfor %}
+    </div>
+
+
 {% endblock %}
