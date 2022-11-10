@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db.models import Avg
 from django.urls import reverse
 from django.utils.text import slugify
 
@@ -64,10 +65,10 @@ class Product(models.Model):
     updated = models.DateTimeField(auto_now=True)
     on_moderation = models.BooleanField(default=True)
     average_rating = models.DecimalField(validators=[MinValueValidator(0), MaxValueValidator(5)], max_digits=2, decimal_places=1)
+    feedback_counter = models.PositiveIntegerField(validators=[MinValueValidator(0), MaxValueValidator(10000)], default=0)
 
     def __str__(self):
-
-        return f'{self.category} - {self.name} - {self.user}'
+        return f'{self.name} - {self.user}'
 
     def get_absolute_url(self):
         return reverse('product-card', kwargs={
@@ -76,7 +77,9 @@ class Product(models.Model):
         })
 
 
-class ShoppingCart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    amount = models.PositiveIntegerField()
+
+
+# class ShoppingCart(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+#     amount = models.PositiveIntegerField()
