@@ -30,16 +30,7 @@ class SubcategoryAdmin(admin.ModelAdmin):
     search_fields = ['name', 'category']
 
 
-@admin.register(ShoppingCart)
-class ShoppingCartAdmin(admin.ModelAdmin):
-    list_display = ['user', 'product', 'amount', 'total_price']
 
-
-    @admin.display(description='Total Price')
-    def total_price(self, cart: ShoppingCart):
-        total = cart.amount * cart.product.price
-        currency = cart.product.currency
-        return f'{total} {currency}'
 
 
 
