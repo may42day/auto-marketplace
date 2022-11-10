@@ -38,6 +38,7 @@ order_param_dict = {
     'OLD':'created',
     'CHEAP':'price',
     'EXPENSIVE':'-price',
+    'RATING':'-average_rating',
 }
 def category(request, slug_category:str, slug_subcategory=None):
     current_category = get_object_or_404(Category, slug=slug_category)

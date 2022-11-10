@@ -11,21 +11,18 @@
                 {% show_sidebar category_selected=current_category %}
 
                 <td class="categories-content" valign="top">
-                    <div class="container mt-5">
+                    <div class="container">
                         {% if current_subcategory %}
                             <h1>{{ current_subcategory }}</h1>
                         {% endif %}
                         {% if products %}
-                        <div class="search-filters">
-                            <form  method="get">
+                        <div class="container mt-2 mb-3">
+                            <form class="filters" method="get">
                                 {% for field in filters_form %}
-                                <div class="1">
                                     {{ field.label_tag }}
                                     {{ field }}
-                                </div>
                                 {% endfor %}
-                                <br>
-                                <button type="submit">find</button>
+                                <button class="search-btn" type="submit"><ion-icon name="search-circle"></ion-icon></button>
                             </form>
                         </div>
                         <div class="row">
@@ -33,28 +30,38 @@
                             {% if not product.on_moderation %}
                             <div class="col-md-4">
                                 <div class="product">
-                                    <div class="image">
+                                    <div class="product-image">
                                         <img src="{{product.picture.url}}" alt="{{ product.name }}" width="300" height="200">
                                     </div>
                                     <div class="info">
                                         <a href="{{ product.get_absolute_url }}"><h3>{{ product.name }}</h3></a>
-                                        <div>
+                                        <div class="info-box">
+                                            <div>
+                                                <ul class="raiting">
+                                                    {% for star in 12545|make_list %}
+                                                    {% if forloop.counter <= product.average_rating %}
+                                                    <li><ion-icon name="star"></ion-icon></li>
+                                                    {% else %}
+                                                    <li><ion-icon name="star-outline"></ion-icon></li>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                    <li>counter</li>
+                                                </ul>
+                                            </div>
+                                            <span class="amount">{{ product.amount }} qty available</span>
+                                        </div>
+                                        <div class="info-box">
                                             <span class="price">{{ product.price }} <small>{{ product.currency }}</small></span>
+                                            <div class="add_to_cart_form">
+                                                <form class="add_to_cart_form" action="{% url 'cart:add_to_cart' product.pk %}" method="post" target="_blank">
+                                                    {% csrf_token %}
+                                                    {% for field in cart_form %}
+                                                    {{ field }}
+                                                    {% endfor %}
+                                                    <button class="add-to-cart"><ion-icon name="cart"></ion-icon></button>
+                                                </form>
+                                            </div>
                                         </div>
-                                        <span class="available">{{ product.amount }} qty available</span>
-                                        <div class="feedback-stars">
-                                            {% for star in 12545|make_list %}
-                                                {% if forloop.counter <= product.average_rating %}
-                                                    <ion-icon name="star"></ion-icon>
-                                                {% else %}
-                                                    <ion-icon name="star-outline"></ion-icon>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </div>
-<!--                                        <form class="add_to_cart" action="{% url 'cart:add_to_cart' product.pk %}" method="post">-->
-<!--                                        {% csrf_token %}-->
-<!--                                        {{ cart_form }}-->
-<!--                                        </form>-->
                                     </div>
                                 </div>
                             </div>
@@ -65,8 +72,9 @@
                 </td>
                 {% else %}
                 <td valign="top">
-                    <div class="container mt-5">
+                    <div class="container mt-3 availability">
                         <h2>No products available</h2>
+                        <ion-icon class='availability-icon' name="sad-outline"></ion-icon>
                     </div>
                 </td>
                 {% endif %}

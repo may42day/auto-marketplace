@@ -16,10 +16,11 @@ SEARCH_FILTERS = [
     ('OLD', 'the oldest'),
     ('CHEAP', 'cheap first'),
     ('EXPENSIVE', 'expensive first'),
+    ('RATING', 'by rating')
 ]
 class SearchFiltersForm(forms.ModelForm):
     search_filter = forms.ChoiceField(choices=SEARCH_FILTERS)
-    stock_availability = forms.BooleanField(required=False)
+    on_stock = forms.BooleanField(required=False)
     class Meta:
         model = Product
         fields = ('currency',)
