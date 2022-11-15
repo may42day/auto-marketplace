@@ -1,10 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<div>
+    <ul class="raiting">
+        {% for star in 12545|make_list %}
+            {% if forloop.counter <= average_rating %}
+        <li><ion-icon name="star"></ion-icon></li>
+            {% else %}
+        <li><ion-icon name="star-outline"></ion-icon></li>
+            {% endif %}
+        {% endfor %}
+        {% if show_counter %}
+        <li><small>({{ counter }})</small></li>
+        {% endif %}
+    </ul>
+</div>
