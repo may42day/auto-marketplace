@@ -11,4 +11,4 @@ class AddToCartForm(forms.Form):
         required=False,
         initial=False,
         widget=forms.HiddenInput
-                                )
+    )

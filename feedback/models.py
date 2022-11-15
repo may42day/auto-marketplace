@@ -5,12 +5,13 @@ from django.db.models import Avg
 from goods.models import Product
 
 
+RAITING_CHOICES = [(f'{i}', f'{i}') for i in range(1,6)]
 
 class Feedback(models.Model):
     product = models.ForeignKey(Product, related_name='feedback', on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name='user', on_delete=models.CASCADE)
     text = models.TextField()
-    rating = models.PositiveIntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
+    rating = models.CharField(max_length=1, choices=RAITING_CHOICES, default='5')
     date = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):

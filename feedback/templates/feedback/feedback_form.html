@@ -1,5 +1,15 @@
 <form action="{% url 'feedback:add_feedback' product_pk %}" method="post">
     {% csrf_token %}
-    {{ feedback_form }}
-    <input type="submit" value="Send feedback">
+    <div class="mb-3 input-group">
+        <span class="input-group-text">{{ feedback_form.rating.label }}</span>
+
+        {{ feedback_form.rating }}
+    </div>
+
+    <div class="mb-3 input-group">
+        <span class="input-group-text">{{ feedback_form.text.label }}</span>
+        {{ feedback_form.text }}
+    </div>
+
+    <input class="btn btn-success" type="submit" value="Send feedback">
 </form>
