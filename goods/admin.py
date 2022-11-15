@@ -4,7 +4,7 @@ from django.db.models import QuerySet
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'user', 'amount', 'price', 'currency', 'on_moderation', 'subcategory', 'category']
+    list_display = ['name', 'user', 'amount', 'price_euro', 'price_usd', 'on_moderation', 'subcategory', 'category']
     list_editable = ['category', 'on_moderation', 'subcategory']
     ordering = ['category', 'user', 'on_moderation']
     actions = ['set_moderation_approval']
@@ -29,6 +29,10 @@ class SubcategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug':('name',)}
     search_fields = ['name', 'category']
 
+@admin.register(CurrencyRate)
+class CurrencyRateAdmin(admin.ModelAdmin):
+    list_display = ['updated', 'Euro_to_Usd', 'created' ]
+    list_editable = ['Euro_to_Usd']
 
 
 

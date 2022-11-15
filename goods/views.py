@@ -16,6 +16,11 @@ class ProductCard(DetailView):
     template_name = 'goods/product_card.html'
     pk_url_kwarg = 'product_id'
 
+    def get_context_data(self, **kwargs):
+
+        context = super().get_context_data(**kwargs)
+        context['cart_form'] = AddToCartForm()
+        return context
 
 @login_required
 def create_product_card(request):
@@ -24,8 +29,19 @@ def create_product_card(request):
         if card_form.is_valid():
             product = card_form.save(commit=False)
             product.user = request.user
-            product.save()
 
+            currency_rate = float(CurrencyRate.objects.latest().Euro_to_Usd)
+            price = float(request.POST['price'])
+            currency = request.POST['currency']
+            if currency == 'USD':
+                product.price_usd = price
+                product.price_euro = price / currency_rate
+            else:
+                product.price_usd = price * currency_rate
+                product.price_euro = price
+            product.average_rating = 0
+            product.feedback_counter = 0
+            product.save()
             return HttpResponseRedirect(f'{product.get_absolute_url()}')
     else:
         card_form = NewCardForm()
