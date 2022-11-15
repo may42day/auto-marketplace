@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load goods_tags %}
+{% load feedback_tags %}
 {% block title %}{{ category.name }}{% endblock %}
 
 
@@ -9,7 +10,6 @@
         <tbody>
             <tr>
                 {% show_sidebar category_selected=current_category %}
-
                 <td class="categories-content" valign="top">
                     <div class="container">
                         {% if current_subcategory %}
@@ -36,18 +36,7 @@
                                     <div class="info">
                                         <a href="{{ product.get_absolute_url }}"><h3>{{ product.name }}</h3></a>
                                         <div class="info-box">
-                                            <div>
-                                                <ul class="raiting">
-                                                    {% for star in 12545|make_list %}
-                                                    {% if forloop.counter <= product.average_rating %}
-                                                    <li><ion-icon name="star"></ion-icon></li>
-                                                    {% else %}
-                                                    <li><ion-icon name="star-outline"></ion-icon></li>
-                                                    {% endif %}
-                                                    {% endfor %}
-                                                    <li><small>({{ product.feedback_counter}})</small></li>
-                                                </ul>
-                                            </div>
+                                            {% show_feedback_stars average_rating=product.average_rating show_counter=True counter=product.feedback_counter %}
                                             <span class="amount">{{ product.amount }} qty available</span>
                                         </div>
                                         <div class="info-box">

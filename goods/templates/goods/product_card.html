@@ -5,38 +5,93 @@
 
 
 {% block content %}
-    <h1> Product card </h1>
-    {% if product.on_moderation %}
-        <ul>Your product card was submitted and will be reviewed by a moderator before
-            being visible to all users. This post is currently awaiting for a moderator to review.</ul>
-    {% endif %}
-    <ul>Owner: {{ product.user }}</ul>
-    <li>Product name: {{ product.name }}</li>
-    <li>Discription: {{ product.discription }}</li>
-    <li>Amount: {{ product.amount }}</li>
-    <li>Price: {{ product.price }} {{ product.currency }}</li>
-    <li>Created: {{ product.created }}</li>
-    {% if product.updated != product.created %}
-        <li> Updated: {{ product.updated }}</li>
-    {% endif %}
-    <img src="{{product.picture.url}}" alt="Product Card" width="100" height="100">
+<div class="container product-card mt-3">
 
-    {% show_feedback_form product_pk=product.pk  %}
-
-    <div class="feedbacks">
-    {% for feedback in product.feedback.all %}
-        <div class="feedback">
-            <h4>{{ feedback.user }} - {{ feedback.rating }}</h4>
-            <h5>{{ feedback.date }}</h5>
-            <p>{{ feedback.text }}</p>
-            {% if feedback.user == request.user or request.user.is_staff %}
-                <a href="{% url 'feedback:remove_feedback' feedback.pk %}">delete feedback</a>
-            {% endif %}
-
+    <div class="product-content">
+        {% if product.on_moderation %}
+        <div class="moderation-block">
+            Your product card was submitted and will be reviewed by a moderator before
+            being visible to all users. This post is currently awaiting for a moderator to review.
         </div>
-        <br>
-    {% endfor %}
+        {% endif %}
+
+        <div class="row">
+            <div class="product-picture col-8">
+                <img src="{{product.picture.url}}" alt="Product Card">
+            </div>
+            <div class="info col-4">
+                <h1 class="fs-3 lh-1">{{ product.name }}</h1>
+                <span class="fw-semibold text-muted"><small>Part number</small> {{ product.part_number }}</span>
+                <div class="product-user mb-3">
+                    Owner: <a href="#">{{ product.user }}</a>
+                </div>
+                {% if product.subcategory %}
+                <div class="product-subcat">Subcategory:
+                    <span class="fw-bolder">{{ product.subcategory }}</span>
+                </div>
+                {% endif %}
+                <div class="product-amount">Amount available:
+                    <span class="fw-bolder">{{ product.amount }}</span>
+                </div>
+                <div class="product-price">Price:
+                    <span class="fw-bolder">{{ product.price }} {{ product.currency }}</span>
+                </div>
+                <div class="product-feedbacks mt-2">
+                    <a href="#feedbacks">{% show_feedback_stars average_rating=product.average_rating show_counter=True counter=product.feedback_counter %}</a>
+                </div>
+                <div class="product-form mt-2">
+                    <form class="add_to_cart_form" action="{% url 'cart:add_to_cart' product.pk %}" method="post" target="_blank">
+                        {% csrf_token %}
+                        {{ cart_form }}
+                        <button class="add-to-cart"><ion-icon name="cart"></ion-icon></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="discription mt-3">
+            <span class="fw-semibold text-muted"><small>Created</small> {{ product.created }}</span>
+            <div class="fw-semibold">Discription:</div>
+            <div class="lh-1"> {{ product.discription|linebreaks }}</div>
+        </div>
     </div>
 
 
+    <div class="mt-3 feedback">
+        <div class="review">
+            <div class="fs-6 fw-semibold">Write a Review</div>
+            {% show_feedback_form product_pk=product.pk  %}
+        </div>
+        <div class="mt-3 feedbacks">
+            <h3>Customer reviews</h3>
+            <div class="rating-info">
+                {% show_feedback_stars average_rating=product.average_rating %}
+                <span><small>{{ product.feedback_counter}} total ratings</small></span>
+            </div>
+            <br>
+            <a name="feedbacks"></a>
+            {% for feedback in product.feedback.all %}
+                <div class="one-feedback-block">
+                    <div class="feedback-username">
+                        <span class="fw-semibold text-muted"><small>{{ feedback.user }}</small></span>
+                    </div>
+                    <div class="feedback-rating">
+                        {% show_feedback_stars average_rating=feedback.rating %}
+                    </div>
+                    <div class="text-muted"><small>Reviewed {{ feedback.date }}</small></div>
+                    <div class="feedback-data fst-italic lh-1">
+                        {{ feedback.text|linebreaks }}
+                    </div>
+
+                    {% if feedback.user == request.user or request.user.is_staff %}
+                    <a class="btn btn-danger" href="{% url 'feedback:remove_feedback' feedback.pk %}">delete</a>
+                    {% endif %}
+                </div>
+                <br>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 {% endblock %}

@@ -41,9 +41,24 @@ class Subcategory(models.Model):
             'slug_subcategory':self.slug,
         })
 
+
+class CurrencyRate(models.Model):
+    Euro_to_Usd = models.DecimalField(max_digits=6, decimal_places=4)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        get_latest_by = "updated"
+    def save(self, *args, **kwargs):
+        super(CurrencyRate, self).save(*args,**kwargs)
+        all_products = Product.objects.all()
+        for product in all_products:
+            product.price_usd = product.price_euro * self.Euro_to_Usd
+            product.save()
+
+
 def user_directory_path(instance, filename):
     return 'uploads/user_{0}/{1}'.format(instance.user.id, filename)
-
 class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products', on_delete=models.PROTECT)
     subcategory = models.ForeignKey(Subcategory, related_name='products', on_delete=models.PROTECT)
@@ -52,14 +67,8 @@ class Product(models.Model):
     part_number = models.CharField(max_length=30)
     discription = models.TextField()
     amount = models.PositiveIntegerField()
-    price = models.DecimalField(validators=[MinValueValidator(1)], max_digits=10, decimal_places=2)
-    EURO = 'EUR'
-    USD = 'USD'
-    CURRENCY_CHOICES = [
-        (EURO, 'Euro'),
-        (USD, 'Dollars'),
-    ]
-    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='USD')
+    price_euro = models.DecimalField(validators=[MinValueValidator(1)], max_digits=10, decimal_places=2, null=True, blank=True)
+    price_usd = models.DecimalField(validators=[MinValueValidator(1)], max_digits=10, decimal_places=2, null=True, blank=True)
     picture = models.ImageField(upload_to = user_directory_path, verbose_name='Product Image', null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
