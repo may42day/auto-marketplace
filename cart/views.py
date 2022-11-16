@@ -38,5 +38,5 @@ def cart_detail(request):
             'update': True
         })
     return render(request, 'cart/ShoppingCart.html', context={
-        'cart':cart
+        'cart':cart,
     })

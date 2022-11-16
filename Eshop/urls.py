@@ -8,7 +8,7 @@ admin.site.index_title = 'Admin panel'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('market/', include('goods.urls')),
+path('market/', include(('goods.urls', 'goods'), namespace='goods')),
     path('cart/', include(('cart.urls', 'cart'), namespace='cart')),
     path('feedback/', include(('feedback.urls', 'feedback'), namespace='feedback')),
     path('', include('users.urls')),

@@ -40,13 +40,25 @@
                                             <span class="amount">{{ product.amount }} qty available</span>
                                         </div>
                                         <div class="info-box">
-                                            <span class="price">{{ product.price }} <small>{{ product.currency }}</small></span>
+                                            {% if currency == 'USD' %}
+                                            <span class="price">{{ product.price_usd }} <small>$</small></span>
+                                            {% else %}
+                                            <span class="price">{{ product.price_euro }} <small>€</small></span>
+                                            {% endif %}
                                             <div class="add_to_cart_form">
-                                                <form class="add_to_cart_form" action="{% url 'cart:add_to_cart' product.pk %}" method="post" target="_blank">
+                                                <form class="d-flex justify-content-between align-items-center" action="{% url 'cart:add_to_cart' product.pk %}" method="post" target="_blank">
                                                     {% csrf_token %}
+                                                    <a class="btn btn-link px-2"
+                                                        onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                                                        <ion-icon name="remove-outline"></ion-icon>
+                                                    </a>
                                                     {% for field in cart_form %}
                                                     {{ field }}
                                                     {% endfor %}
+                                                    <a class="btn btn-link px-2"
+                                                        onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                                                        <ion-icon name="add-outline"></ion-icon>
+                                                    </a>
                                                     <button class="add-to-cart"><ion-icon name="cart"></ion-icon></button>
                                                 </form>
                                             </div>

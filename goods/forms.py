@@ -24,12 +24,12 @@ class NewCardForm(forms.ModelForm):
         model = Product
         fields = ('category', 'subcategory', 'name', 'part_number', 'discription', 'amount', 'picture')
 
-    def __int__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(NewCardForm, self).__init__(*args, **kwargs)
         self.fields['picture'].required = False
 
 
-class SearchFiltersForm(forms.ModelForm):
+class SearchFiltersForm(forms.Form):
     search_filter = forms.ChoiceField(choices=SEARCH_FILTERS)
     on_stock = forms.BooleanField(required=False)
     currency = forms.ChoiceField(choices=CURRENCY_CHOICES)

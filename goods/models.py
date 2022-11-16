@@ -14,7 +14,7 @@ class Category(models.Model):
     picture = models.ImageField(upload_to=category_directory_path, verbose_name='Category Image', null=True, blank=True)
 
     def get_absolute_url(self):
-        return reverse('category-detail', args=[self.slug])
+        return reverse('goods:category-detail', args=[self.slug])
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -36,7 +36,7 @@ class Subcategory(models.Model):
         super(Subcategory, self).save(*args,**kwargs)
 
     def get_absolute_url(self):
-        return reverse('category-detail', kwargs={
+        return reverse('goods:category-detail', kwargs={
             'slug_category':self.category.slug,
             'slug_subcategory':self.slug,
         })
@@ -80,7 +80,7 @@ class Product(models.Model):
         return f'{self.name} - {self.user}'
 
     def get_absolute_url(self):
-        return reverse('product-card', kwargs={
+        return reverse('goods:product-card', kwargs={
             'slug_category': self.category.slug,
             'product_id': self.pk,
         })
