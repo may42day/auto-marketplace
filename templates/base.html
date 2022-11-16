@@ -32,10 +32,10 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             {% if request.user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'moderation' %}">Moderation</a>
+                    <a class="nav-link" href="{% url 'goods:moderation' %}">Moderation</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'market' %}">Market</a>
+                    <a class="nav-link" href="{% url 'goods:market' %}">Market</a>
                 </li>
 
                 <li class="nav-item dropdown">
@@ -49,7 +49,7 @@
                         <li><a class="dropdown-item" href="#">Purchase history</a></li>
                         {% else %}
                         <li><a class="dropdown-item" href="{% url 'my_products' %}">My products</a></li>
-                        <li><a class="dropdown-item" href="{% url 'create-card' %}">New product card</a></li>
+                        <li><a class="dropdown-item" href="{% url 'goods:create-card' %}">New product card</a></li>
                         {% endif %}
                     </ul>
                 </li>
@@ -59,7 +59,7 @@
 
             {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'market' %}">Market</a>
+                    <a class="nav-link" href="{% url 'goods:market' %}">Market</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'login' %}">Log In</a>
@@ -69,7 +69,7 @@
                 </li>
             {% endif %}
             </ul>
-            <form class="d-flex" role="search" action="{% url 'search' %}">
+            <form class="d-flex" role="search" action="{% url 'goods:search' %}">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
                 <button class="btn btn-outline-dark" type="submit">Search</button>
             </form>

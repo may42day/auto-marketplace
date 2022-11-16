@@ -353,3 +353,9 @@
     border-radius: 10px;
     padding: 10px;
 }
+
+@media (min-width: 1025px) {
+.h-custom {
+height: 100vh !important;
+}
+}

@@ -34,7 +34,7 @@
                     <span class="fw-bolder">{{ product.amount }}</span>
                 </div>
                 <div class="product-price">Price:
-                    <span class="fw-bolder">{{ product.price }} {{ product.currency }}</span>
+                    <span class="fw-bolder">{{ product.price_usd }} $</span>
                 </div>
                 <div class="product-feedbacks mt-2">
                     <a href="#feedbacks">{% show_feedback_stars average_rating=product.average_rating show_counter=True counter=product.feedback_counter %}</a>

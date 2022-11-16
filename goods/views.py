@@ -58,11 +58,12 @@ order_param_dict = {
 }
 def category(request, slug_category:str, slug_subcategory=None):
     current_category = get_object_or_404(Category, slug=slug_category)
-
+    currency = 'EURO'
     filters_form = SearchFiltersForm(request.GET)
     if request.GET:
         new_param = request.GET['search_filter']
         order_param = order_param_dict[new_param]
+        currency = request.GET['currency']
         if 'stock_availability' in request.GET:
             stock = 0
         else:
@@ -79,7 +80,8 @@ def category(request, slug_category:str, slug_subcategory=None):
         'products':products,
         'cart_form': add_to_cart_form,
         'filters_form': filters_form,
-        'current_subcategory':current_subcategory
+        'current_subcategory':current_subcategory,
+        'currency':currency,
     })
 
 
