@@ -12,6 +12,7 @@
           <div class="card-body p-4">
             <div class="row">
               <div class="col-lg-7">
+                {% if user.profile.user_type == 'Customer'%}
                 <h5 class="mb-3"><a href="{% url 'goods:market' %}" class="text-body"><i
                       class="fas fa-long-arrow-alt-left me-2"></i>Continue shopping</a></h5>
                 <hr>
@@ -42,7 +43,7 @@
                         </div>
                         <div class="ms-3">
                           <h5>{{ product.name|truncatewords:5 }}</h5>
-                            {% if True %}
+                            {% if currency == 'EURO' %}
                           <p class="small mb-0">{{ item.price_euro }} €</p>
                             {% else %}
                           <p class="small mb-0">{{ item.price_usd }} $</p>
@@ -67,7 +68,7 @@
                             </form>
                           </div>
                         <div class="cart-price me-3 ms-2">
-                            {% if True %}
+                            {% if currency == 'EURO' %}
                           <h5 class="mb-0"><nobr>{{ item.total_price_euro }} € </nobr></h5>
                             {% else %}
                           <h5 class="mb-0"><nobr>{{ item.total_price_usd }} $ </nobr></h5>
@@ -81,7 +82,11 @@
                 {% endwith %}
                 {% endfor %}
 
+                {% else %}
+                <div class="mb-0">Sellers can't make purchases.</div>
+                {% endif %}
               </div>
+
               <div class="col-lg-5">
 
                 <div class="card bg-primary text-white rounded-3">
@@ -97,55 +102,47 @@
                         class="fab fa-cc-visa fa-2x me-2"></i></a>
                     <a href="#!" type="submit" class="text-white"><i class="fab fa-cc-paypal fa-2x"></i></a>
 
-                    <form class="mt-4">
-                      <div class="form-outline form-white mb-4">
-                        <input type="text" id="typeName" class="form-control form-control-lg" siez="17"
-                          placeholder="Cardholder's Name" />
-                        <label class="form-label" for="typeName">Cardholder's Name</label>
-                      </div>
 
-                      <div class="form-outline form-white mb-4">
-                        <input type="text" id="typeText" class="form-control form-control-lg" siez="17"
-                          placeholder="1234 5678 9012 3457" minlength="19" maxlength="19" />
-                        <label class="form-label" for="typeText">Card Number</label>
-                      </div>
+                    <form class="mt-4" action="{% url 'cart:cart_detail' %}" method="post" >
+                        {% csrf_token %}
+                        <div class="form-outline form-white mb-4">
+                          {{ payment_form.name }}
+                          <label class="form-label">Cardholder's Name</label>
+                        </div>
 
-                      <div class="row mb-4">
-                        <div class="col-md-6">
-                          <div class="form-outline form-white">
-                            <input type="text" id="typeExp" class="form-control form-control-lg"
-                              placeholder="MM/YYYY" size="7" id="exp" minlength="7" maxlength="7" />
-                            <label class="form-label" for="typeExp">Expiration</label>
+                        <div class="form-outline form-white mb-4">
+                          {{ payment_form.card_number }}
+                          <label class="form-label"">Card Number</label>
+                        </div>
+
+                        <div class="row mb-4">
+                          <div class="col-md-6">
+                            <div class="form-outline form-white errors">
+                              {{ payment_form.expiration }}
+                              {{ payment_form.expiration.errors }}
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-outline form-white">
+                              {{ payment_form.cvv }}
+                              <label class="form-label" >CVV</label>
+                            </div>
                           </div>
                         </div>
-                        <div class="col-md-6">
-                          <div class="form-outline form-white">
-                            <input type="password" id="typeText" class="form-control form-control-lg"
-                              placeholder="&#9679;&#9679;&#9679;" size="1" minlength="3" maxlength="3" />
-                            <label class="form-label" for="typeText">Cvv</label>
-                          </div>
-                        </div>
-                      </div>
 
+
+                      <hr class="my-4">
+
+                      <div class="d-flex justify-content-between mb-4">
+                        <p class="mb-2">Total(Incl. taxes)</p>
+                          {% if currency == 'EURO' %}
+                            <p class="mb-2">{{ cart.get_total_price_euro }} €</p>
+                          {% else %}
+                            <p class="mb-2">{{ cart.get_total_price_usd }} $</p>
+                          {% endif %}
+                      </div>
+                      <button type="submit" class="btn btn-info btn-block btn-lg">Checkout</button>
                     </form>
-
-                    <hr class="my-4">
-
-                    <div class="d-flex justify-content-between mb-4">
-                      <p class="mb-2">Total(Incl. taxes)</p>
-                        {% if True %}
-                          <p class="mb-2">{{ cart.get_total_price_euro }} €</p>
-                        {% else %}
-                          <p class="mb-2">{{ cart.get_total_price_usd }} $</p>
-                        {% endif %}
-                    </div>
-
-                    <button type="button" class="btn btn-info btn-block btn-lg">
-                      <div class="d-flex justify-content-between">
-                        <span>Checkout <ion-icon name="checkmark-done-circle"></ion-icon></span>
-                      </div>
-                    </button>
-
                   </div>
                 </div>
               </div>
