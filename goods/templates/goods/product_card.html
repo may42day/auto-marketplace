@@ -34,15 +34,30 @@
                     <span class="fw-bolder">{{ product.amount }}</span>
                 </div>
                 <div class="product-price">Price:
+                    {% if currency == 'EURO' %}
+                    <span class="fw-bolder">{{ product.price_euro }} €</span>
+                    {% else %}
                     <span class="fw-bolder">{{ product.price_usd }} $</span>
+                    {% endif %}
                 </div>
                 <div class="product-feedbacks mt-2">
                     <a href="#feedbacks">{% show_feedback_stars average_rating=product.average_rating show_counter=True counter=product.feedback_counter %}</a>
                 </div>
                 <div class="product-form mt-2">
-                    <form class="add_to_cart_form" action="{% url 'cart:add_to_cart' product.pk %}" method="post" target="_blank">
+                <div class="add_to_cart_form">
+                    <form class="d-flex  align-items-center" action="{% url 'cart:add_to_cart' product.pk %}" method="post" target="_blank">
                         {% csrf_token %}
-                        {{ cart_form }}
+                        <a class="btn btn-link px-2"
+                            onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                            <ion-icon name="remove-outline"></ion-icon>
+                        </a>
+                        {% for field in cart_form %}
+                        {{ field }}
+                        {% endfor %}
+                        <a class="btn btn-link px-2"
+                            onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                            <ion-icon name="add-outline"></ion-icon>
+                        </a>
                         <button class="add-to-cart"><ion-icon name="cart"></ion-icon></button>
                     </form>
                 </div>
