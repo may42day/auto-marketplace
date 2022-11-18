@@ -17,9 +17,12 @@ class ProductCard(DetailView):
     pk_url_kwarg = 'product_id'
 
     def get_context_data(self, **kwargs):
-
         context = super().get_context_data(**kwargs)
         context['cart_form'] = AddToCartForm()
+        if 'currency' in self.request.COOKIES:
+            context['currency'] = self.request.COOKIES.get('currency')
+        else:
+            context['currency'] = 'EURO'
         return context
 
 @login_required
@@ -29,7 +32,6 @@ def create_product_card(request):
         if card_form.is_valid():
             product = card_form.save(commit=False)
             product.user = request.user
-
             currency_rate = float(CurrencyRate.objects.latest().Euro_to_Usd)
             price = float(request.POST['price'])
             currency = request.POST['currency']
@@ -52,30 +54,42 @@ def create_product_card(request):
 order_param_dict = {
     'NEW':'-created',
     'OLD':'created',
-    'CHEAP':'price',
-    'EXPENSIVE':'-price',
+    'CHEAP':'price_euro',
+    'EXPENSIVE':'-price_euro',
     'RATING':'-average_rating',
 }
 def category(request, slug_category:str, slug_subcategory=None):
     current_category = get_object_or_404(Category, slug=slug_category)
-    currency = 'EURO'
     filters_form = SearchFiltersForm(request.GET)
+
+    if 'currency' in request.COOKIES:
+        currency = request.COOKIES.get('currency')
+    else:
+        currency = 'EURO'
+
     if request.GET:
+        currency = request.GET['currency']
         new_param = request.GET['search_filter']
         order_param = order_param_dict[new_param]
-        currency = request.GET['currency']
         if 'stock_availability' in request.GET:
-            stock = 0
+            stock_filter = 0
         else:
-            stock = -1
-        products = Product.objects.filter(category=current_category.id, amount__gt=stock).order_by(order_param)
+            stock_filter = -1
+        products = Product.objects.filter(category=current_category.id, amount__gt=stock_filter).order_by(order_param)
     else:
         products = Product.objects.filter(category=current_category.id).order_by('-created')
+
     add_to_cart_form = AddToCartForm()
+
     current_subcategory = None
     if slug_subcategory:
         current_subcategory = get_object_or_404(Subcategory, slug=slug_subcategory)
-    return render(request, 'goods/category.html', context={
+
+    new_request = request.GET.copy()
+    new_request['currency'] = currency
+    filters_form = SearchFiltersForm(new_request)
+
+    response = render(request, 'goods/category.html', context={
         'current_category':current_category,
         'products':products,
         'cart_form': add_to_cart_form,
@@ -83,7 +97,9 @@ def category(request, slug_category:str, slug_subcategory=None):
         'current_subcategory':current_subcategory,
         'currency':currency,
     })
-
+    if request.GET:
+        response.set_cookie('currency', currency)
+    return response
 
 @login_required
 def products_on_moderation(request):
