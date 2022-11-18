@@ -31,9 +31,11 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             {% if request.user.is_authenticated %}
+                {% if request.user.is_staff %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'goods:moderation' %}">Moderation</a>
                 </li>
+                {% endif %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'goods:market' %}">Market</a>
                 </li>
@@ -50,6 +52,7 @@
                         {% else %}
                         <li><a class="dropdown-item" href="{% url 'my_products' %}">My products</a></li>
                         <li><a class="dropdown-item" href="{% url 'goods:create-card' %}">New product card</a></li>
+                        <li><a class="dropdown-item" href="#">Sales report</a></li>
                         {% endif %}
                     </ul>
                 </li>

@@ -1,8 +1,9 @@
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 from .cart import Cart
-from .forms import AddToCartForm
+from .forms import *
 from goods.models import Product
 
 
@@ -37,6 +38,23 @@ def cart_detail(request):
             'amount': product['amount'],
             'update': True
         })
+
+    if 'currency' in request.COOKIES:
+        currency = request.COOKIES.get('currency')
+    else:
+        currency = 'EURO'
+
+    if request.method == 'POST':
+        payment_form = PaymentForm(request.POST)
+        if payment_form.is_valid():
+            cart.clear()
+            return HttpResponseRedirect('/')
+
+    else:
+        payment_form = PaymentForm()
+
     return render(request, 'cart/ShoppingCart.html', context={
         'cart':cart,
+        'currency': currency,
+        'payment_form': payment_form,
     })
