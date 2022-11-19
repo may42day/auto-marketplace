@@ -1,8 +1,10 @@
 from django import forms
 from django.forms import NumberInput, TextInput
 from django.core.validators import MinValueValidator, MaxValueValidator
+from .models import *
 import re
 import datetime
+
 
 AMOUNT_CHOICES = [(i, str(i)) for i in range(1, 21)]
 
@@ -75,5 +77,14 @@ class PaymentForm(forms.Form):
                 raise forms.ValidationError('Invalid date')
             return expiration
         raise forms.ValidationError('Invalid input (try MM/YYYY)')
+
+
+class OrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ('full_name', 'address', 'postal_code', 'phone_number', 'comment')
+
+
+
 
 
