@@ -48,7 +48,7 @@
                     <ul class="dropdown-menu">
                         {% if user.profile.user_type == 'Customer' %}
                         <li><a class="dropdown-item" href="{% url 'cart:cart_detail' %}">Cart</a></li>
-                        <li><a class="dropdown-item" href="#">Purchase history</a></li>
+                        <li><a class="dropdown-item" href="{% url 'cart:orders-history' %}">Purchase history</a></li>
                         {% else %}
                         <li><a class="dropdown-item" href="{% url 'my_products' %}">My products</a></li>
                         <li><a class="dropdown-item" href="{% url 'goods:create-card' %}">New product card</a></li>
