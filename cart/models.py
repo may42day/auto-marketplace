@@ -1,7 +1,9 @@
 import json
 from django.contrib.auth.models import User
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
+
+from goods.models import Product
+
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -18,11 +20,20 @@ class Order(models.Model):
     ]
     status = models.CharField(max_length=9, choices=STATUS_CHOICES, default='OPEN')
     comment = models.CharField(max_length=60, blank=True, null=True)
-    total_sum = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    order_info = models.CharField(max_length=300, blank=True, null=True)
 
-    def set_order_info(self, products_list):
-        self.order_info = json.dumps(products_list)
+    def order_cost(self):
+        return sum(item.item_cost() for item in self.items.all())
 
-    def get_order_info(self):
-        return json.loads(self.order_info)
+CURRENCY_CHOICES = [
+    ('EURO', 'Euro'),
+    ('USD', 'Dollars'),
+]
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, related_name='products', on_delete=models.PROTECT)
+    amount = models.PositiveIntegerField(default=1)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    currency = models.CharField(max_length=7, choices=CURRENCY_CHOICES, default='Euro')
+
+    def item_cost(self, currency='EURO'):
+        return self.price * self.amount

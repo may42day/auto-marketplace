@@ -27,7 +27,11 @@
                     <p class="mb-0">Your cart is empty.</p>
                       {% endif %}
                       {% endwith %}
+                    {% if error_message %}
+                    <p class="mb-0">{{error_message}}</p>
+                    {% endif %}
                   </div>
+
                 </div>
 
                 {% for item in cart %}

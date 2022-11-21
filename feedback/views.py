@@ -1,6 +1,4 @@
-from django.db.models import Avg
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from .forms import AddFeedbackForm
@@ -24,15 +22,10 @@ def add_feedback(request, product_id):
 @login_required
 def remove_feedback(request, feedback_id):
     feedback = Feedback.objects.get(pk=feedback_id)
-    # product = feedback.product
     url = feedback.product.get_absolute_url()
     feedback.calculate_average_rating(delete=True, exclude_pk=feedback.pk)
     if request.user == feedback.user:
         feedback.delete()
 
-
-    # avg_rating = round(Feedback.objects.filter(product=product).aggregate(Avg('rating'))['rating__avg'], 1)
-    # product.average_rating = avg_rating
-    # product.save()
     return HttpResponseRedirect(f'{url}')
 

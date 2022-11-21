@@ -45,12 +45,13 @@ class Cart(object):
         for product in products:
             product_id = str(product.id)
             self.cart[product_id]['product'] = product
+            self.cart[product_id]['id'] = product_id
 
         for item in self.cart.values():
-            item['price_usd'] = Decimal(item['price_usd'])
-            item['price_euro'] = Decimal(item['price_euro'])
-            item['total_price_usd'] = item['price_usd'] * item['amount']
-            item['total_price_euro'] = item['price_euro'] * item['amount']
+            item['price_usd'] = float(item['price_usd'])
+            item['price_euro'] = float(item['price_euro'])
+            item['total_price_usd'] = round(item['price_usd'] * item['amount'], 2)
+            item['total_price_euro'] = round(item['price_euro'] * item['amount'], 2)
             yield item
 
 
@@ -58,9 +59,11 @@ class Cart(object):
         return sum(item['amount'] for item in self.cart.values())
 
     def get_total_price_euro(self):
-            return sum(Decimal(item['price_euro']) * item['amount'] for item in self.cart.values())
+        total = sum((item['price_euro']) * item['amount'] for item in self.cart.values())
+        return round(total, 2)
     def get_total_price_usd(self):
-            return sum(Decimal(item['price_usd']) * item['amount'] for item in self.cart.values())
+        total = sum(float(item['price_usd']) * item['amount'] for item in self.cart.values())
+        return round(total, 2)
 
     def clear(self):
         del self.session[settings.CART_SESSION_ID]

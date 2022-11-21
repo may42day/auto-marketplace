@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from .models import *
@@ -60,7 +61,6 @@ order_param_dict = {
 }
 def category(request, slug_category:str, slug_subcategory=None):
     current_category = get_object_or_404(Category, slug=slug_category)
-    filters_form = SearchFiltersForm(request.GET)
 
     if 'currency' in request.COOKIES:
         currency = request.COOKIES.get('currency')
@@ -72,31 +72,38 @@ def category(request, slug_category:str, slug_subcategory=None):
         new_param = request.GET['search_filter']
         order_param = order_param_dict[new_param]
         if 'stock_availability' in request.GET:
-            stock_filter = 0
+            products = Product.objects.filter(category=current_category.id, amount__gt=0, on_moderation=False).order_by(order_param)
         else:
-            stock_filter = -1
-        products = Product.objects.filter(category=current_category.id, amount__gt=stock_filter).order_by(order_param)
+            products = Product.objects.filter(category=current_category.id, amount__gt=-1, on_moderation=False).order_by(order_param)
     else:
-        products = Product.objects.filter(category=current_category.id).order_by('-created')
+        products = Product.objects.filter(category=current_category.id, on_moderation=False).order_by('-created')
 
     add_to_cart_form = AddToCartForm()
 
     current_subcategory = None
     if slug_subcategory:
         current_subcategory = get_object_or_404(Subcategory, slug=slug_subcategory)
+        products = products.filter(subcategory=current_subcategory)
 
     new_request = request.GET.copy()
     new_request['currency'] = currency
     filters_form = SearchFiltersForm(new_request)
 
+    products_list = products
+    paginator = Paginator(products_list, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     response = render(request, 'goods/category.html', context={
         'current_category':current_category,
-        'products':products,
+        'products': products,
         'cart_form': add_to_cart_form,
         'filters_form': filters_form,
         'current_subcategory':current_subcategory,
         'currency':currency,
+        'page_obj': page_obj,
     })
+
     if request.GET:
         response.set_cookie('currency', currency)
     return response
