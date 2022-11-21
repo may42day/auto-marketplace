@@ -22,11 +22,21 @@
                                     {{ field.label_tag }}
                                     {{ field }}
                                 {% endfor %}
+                                <label for="page">Page</label>
+                                <select name="page">
+                                {% for page in page_obj.paginator.page_range %}
+                                    {% if page_obj.number == page %}
+                                    <option value="{{page}}" selected>{{page}}</option>
+                                    {% else %}
+                                    <option value="{{page}}">{{page}}</option>
+                                    {% endif %}
+                                {% endfor %}
+                                </select>
                                 <button class="search-btn" type="submit"><ion-icon name="search-circle"></ion-icon></button>
                             </form>
                         </div>
                         <div class="row">
-                            {% for product in products %}
+                            {% for product in page_obj %}
                             {% if not product.on_moderation %}
                             <div class="col-md-4">
                                 <div class="product">

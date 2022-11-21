@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse
 from django.views.generic import ListView
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 from .cart import Cart
@@ -47,38 +47,48 @@ def cart_detail(request):
     else:
         currency = 'EURO'
 
-    if request.method == 'POST':
+    payment_form = PaymentForm()
+    error_message = ''
+    if request.method == 'POST': # and payment_form.is_valid():
         payment_form = PaymentForm(request.POST)
-        products = []
-        for product in cart:
-            product_name = product['product'].name
-            amount = product['product'].amount
-            if currency == 'EURO':
-                price = product['product'].price_euro
+        order = Order.objects.create(user=request.user, status='OPEN')
+        for item in cart:
+            if item['product'].amount < item['amount']:
+                amount = item['product'].amount
             else:
-                price = product['product'].price_usd
-            products.append([product_name, amount, price])
+                amount = item['amount']
+            product['product'].amount -= amount
+            product['product'].save()
 
-        #if payment_form.is_valid() and products:
-        if products:
-            total_price = cart.get_total_price_euro()
-            Order.objects.create(user=request.user, total_sum=total_price, order_info=products)
-            for product in cart:
-                product['product'].amount -= product['amount']
+            if currency == 'Euro':
+                price = item['price_euro']
+            else:
+                price = item['price_usd']
 
-            return HttpResponseRedirect('/')
-    else:
-        payment_form = PaymentForm()
+            OrderItem.objects.create(
+                order=order,
+                product=item['product'],
+                amount=amount,
+                price=,
+                currency=currency,
+
+            )
+
+        if len(cart) > 0:
+            cart.clear()
+            return redirect(reverse('cart:order', kwargs={'order_pk':order.pk}))
+        error_message = 'Cart is empty or product is not available'
 
     return render(request, 'cart/ShoppingCart.html', context={
         'cart':cart,
         'currency': currency,
         'payment_form': payment_form,
+        'error_message': error_message,
     })
 
 
-@method_decorator(login_required, name='dispatch')
-class OrdersHistory(ListView):
+
+class OrdersHistory(LoginRequiredMixin, ListView):
     model = Order
     template_name = 'cart/OrdersHistory.html'
     context_object_name = 'orders'
@@ -90,6 +100,7 @@ class OrdersHistory(ListView):
 @login_required()
 def order_info(request, order_pk):
     order = get_object_or_404(Order, pk=order_pk)
+    items = order.items.all()
     if order.user == request.user:
         order_form = OrderForm(request.POST)
         if request.POST:
@@ -97,6 +108,7 @@ def order_info(request, order_pk):
 
         return render(request, 'cart/Order.html', context={
             'order': order,
+            'items': items,
             'order_form': order_form,
 
         })
