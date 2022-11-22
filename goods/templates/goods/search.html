@@ -1,46 +1,88 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load goods_tags %}
+{% load feedback_tags %}
 {% block title %}{{ category.name }}{% endblock %}
 
 
 {% block content %}
-<table class="category-table">
-        <tbody>
-            <tr>
-                <td class="categories-content" valign="top">
-                    <div class="container mt-5">
-                        <div class="row">
-                            {% if products %}
-                            {% for product in products %}
-                            {% if not product.on_moderation %}
-                            <div class="col-md-4">
-                                <div class="product">
-                                    <div class="image">
-                                        <img src="{{product.picture.url}}" alt="{{ product.name }}" width="300" height="200">
-                                    </div>
-                                    <div class="info">
-                                        <a href="{{ product.get_absolute_url }}"><h3>{{ product.name }}</h3></a>
-                                        <div>
-                                            <span class="price">{{ product.price }} <small>{{ product.currency }}</small></span>
-                                        </div>
-                                        <span class="available">{{ product.amount }} qty available</span>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endif %}
-                            {% endfor %}
-                            {% else %}
-                            <td valign="top">
-                                <div class="container mt-5">
-                                    <h2>No products available</h2>
-                                </div>
-                            </td>
-                            {% endif %}
-                        </div>
+<div class="container">
+    {% if products %}
+    <div class="container mt-2 mb-3">
+        <form class="filters" method="get">
+            {% for field in filters_form %}
+                {{ field.label_tag }}
+                {{ field }}
+            {% endfor %}
+            <label for="page">Page</label>
+            <select name="page">
+            {% for page in page_obj.paginator.page_range %}
+                {% if page_obj.number == page %}
+                <option value="{{page}}" selected>{{page}}</option>
+                {% else %}
+                <option value="{{page}}">{{page}}</option>
+                {% endif %}
+            {% endfor %}
+            </select>
+            <button class="search-btn" type="submit"><ion-icon name="search-circle"></ion-icon></button>
+        </form>
+    </div>
+    {% endif %}
+    <div class="row">
+        {% for product in page_obj %}
+        {% if not product.on_moderation %}
+        <div class="col-md-4">
+            <div class="product">
+                <div class="product-image">
+                    <img src="{{product.picture.url}}" alt="{{ product.name }}" width="300" height="200">
+                </div>
+                <div class="info">
+                    <a href="{{ product.get_absolute_url }}"><h3>{{ product.name }}</h3></a>
+                    <div class="info-box">
+                        {% show_feedback_stars average_rating=product.average_rating show_counter=True counter=product.feedback_counter %}
+                        <span class="amount">{{ product.amount }} qty available</span>
                     </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                    <div class="info-box">
+                        {% if currency == 'USD' %}
+                        <span class="price">{{ product.price_usd }} <small>$</small></span>
+                        {% else %}
+                        <span class="price">{{ product.price_euro }} <small>€</small></span>
+                        {% endif %}
+
+                        {% if user.profile.user_type == 'Customer' and product.amount > 0 %}
+                        <div class="add_to_cart_form">
+                            <form class="d-flex justify-content-between align-items-center" action="{% url 'cart:add_to_cart' product.pk %}" method="post" target="_blank">
+                                {% csrf_token %}
+                                <a class="btn btn-link px-2"
+                                    onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                                    <ion-icon name="remove-outline"></ion-icon>
+                                </a>
+                                {% for field in cart_form %}
+                                {{ field }}
+                                {% endfor %}
+                                <a class="btn btn-link px-2"
+                                    onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                                    <ion-icon name="add-outline"></ion-icon>
+                                </a>
+                                <button  class="add-to-cart"><ion-icon name="cart"></ion-icon></button>
+                            </form>
+                        </div>
+                        {% else %}
+                        <div></div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="container mt-5">
+            <h2>No products available</h2>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 {% endblock %}
 
