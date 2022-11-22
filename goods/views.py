@@ -118,9 +118,32 @@ def products_on_moderation(request):
 
 def search(request):
     search = request.GET.get('search', '')
-    if search:
-        products = Product.objects.filter(name__icontains=search).order_by('-created')
+    if search or request.GET:
+        if 'currency' in request.GET:
+            currency = request.GET['currency']
+        else:
+            currency = 'EURO'
+        if 'search_filter' in request.GET:
+            new_param = request.GET['search_filter']
+            order_param = order_param_dict[new_param]
+        else:
+            order_param = '-created'
+        add_to_cart_form = AddToCartForm()
+        filters_form = SearchFiltersForm(request.GET)
+        if 'on_stock' in request.GET:
+            products = Product.objects.filter(amount__gt=0, on_moderation=False).order_by(order_param)
+        else:
+            products = Product.objects.filter(amount__gt=-1, on_moderation=False).order_by(order_param)
+
+        products_list = products
+        paginator = Paginator(products_list, 10)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
         return render(request, 'goods/search.html', context={
-            'products':products,
+            'page_obj':page_obj,
+            'currency': currency,
+            'filters_form':filters_form,
+            'add_to_cart_form':add_to_cart_form,
         })
     return HttpResponseRedirect('/')
