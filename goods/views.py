@@ -71,7 +71,7 @@ def category(request, slug_category:str, slug_subcategory=None):
         currency = request.GET['currency']
         new_param = request.GET['search_filter']
         order_param = order_param_dict[new_param]
-        if 'stock_availability' in request.GET:
+        if 'on_stock' in request.GET:
             products = Product.objects.filter(category=current_category.id, amount__gt=0, on_moderation=False).order_by(order_param)
         else:
             products = Product.objects.filter(category=current_category.id, amount__gt=-1, on_moderation=False).order_by(order_param)

@@ -359,3 +359,11 @@
 height: 100vh !important;
 }
 }
+
+.shopping-cart{
+    background-color: #eee;
+}
+
+.purchase-history{
+    background-color: #eee;
+}

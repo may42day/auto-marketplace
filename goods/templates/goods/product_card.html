@@ -44,6 +44,7 @@
                     <a href="#feedbacks">{% show_feedback_stars average_rating=product.average_rating show_counter=True counter=product.feedback_counter %}</a>
                 </div>
                 <div class="product-form mt-2">
+                    {% if product.amount > 0 %}
                 <div class="add_to_cart_form">
                     <form class="d-flex  align-items-center" action="{% url 'cart:add_to_cart' product.pk %}" method="post" target="_blank">
                         {% csrf_token %}
@@ -61,6 +62,7 @@
                         <button class="add-to-cart"><ion-icon name="cart"></ion-icon></button>
                     </form>
                 </div>
+                    {% endif %}
             </div>
         </div>
 
@@ -73,10 +75,12 @@
 
 
     <div class="mt-3 feedback">
+        {% if request.user.profile == 'CUSTOMER' %}
         <div class="review">
             <div class="fs-6 fw-semibold">Write a Review</div>
             {% show_feedback_form product_pk=product.pk  %}
         </div>
+        {% endif %}
         <div class="mt-3 feedbacks">
             <h3>Customer reviews</h3>
             <div class="rating-info">

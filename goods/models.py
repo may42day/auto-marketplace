@@ -85,10 +85,3 @@ class Product(models.Model):
             'product_id': self.pk,
         })
 
-
-
-
-# class ShoppingCart(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-#     amount = models.PositiveIntegerField()

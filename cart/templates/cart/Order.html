@@ -5,15 +5,6 @@
 
 {% block content %}
 <section class="h-100 h-custom" style="background-color: #eee;">
-    <div>{{ order }}</div>
-    <br>
-    <div> {{order_form}}</div>
-</section>
-{{ order.order_info }}
-<br>
-{{ items }}
-
-<section class="h-100 h-custom" style="background-color: #eee;">
   <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="col">
@@ -21,15 +12,17 @@
           <div class="card-body p-4">
             <div class="row">
               <div class="col-lg-7">
-
                 <div class="d-flex justify-content-between align-items-center mb-4">
                   <div>
                     <p class="mb-1">Order #{{order.pk}}</p>
-
+                    <p class="mb-1">Status: {{order.status_message}}</p>
                   </div>
-
+                  <div class="delete-order">
+                    <form method="POST" action="{% url 'cart:remove-order' order.pk %}">
+                      {% csrf_token %}<input class="btn btn-danger" type="submit" value="DELETE">
+                    </form>
+                  </div>
                 </div>
-
                 {% for item in items %}
                 {% with item.product as product %}
                 <div class="card mb-3">
@@ -43,35 +36,20 @@
                         </div>
                         <div class="ms-3">
                           <h5>{{ product.name|truncatewords:5 }}</h5>
-                            {% if currency == 'EURO' %}
-                          <p class="small mb-0">{{ item.price_euro }} €</p>
+                            {% if order.currency == 'EURO' %}
+                          <p class="small mb-0">{{ item.price }} €</p>
                             {% else %}
-                          <p class="small mb-0">{{ item.price_usd }} $</p>
+                          <p class="small mb-0">{{ item.price }} $</p>
                             {% endif %}
                         </div>
                       </div>
                       <div class="d-flex flex-row align-items-center">
-                          <div class="width: 50px; add_to_cart_form">
-                            <form class="d-flex justify-content-between align-items-center"
-                                    action="{% url 'cart:add_to_cart' product.id %}" method="post">
-                              {% csrf_token %}
-                              <button class="btn btn-link px-2"
-                                onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                                <i class="fas fa-minus"></i>
-                              </button>
-                              {{ item.update_amount_form.amount }}
-                              <button class="btn btn-link px-2"
-                                onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                                <i class="fas fa-plus"></i>
-                              </button>
-                              {{ item.update_amount_form.update }}
-                            </form>
-                          </div>
+                        <h4 >(x{{ item.amount }})</h4>
                         <div class="cart-price me-3 ms-2">
-                            {% if currency == 'EURO' %}
-                          <h5 class="mb-0"><nobr>{{ item.total_price_euro }} € </nobr></h5>
+                            {% if order.currency == 'EURO' %}
+                          <h5 class="mb-0"><nobr>{{ item.item_cost }} € </nobr></h5>
                             {% else %}
-                          <h5 class="mb-0"><nobr>{{ item.total_price_usd }} $ </nobr></h5>
+                          <h5 class="mb-0"><nobr>{{ item.item_cost }} $ </nobr></h5>
                             {% endif %}
                         </div>
                       </div>
@@ -81,63 +59,64 @@
                 {% endwith %}
                 {% endfor %}
               </div>
-
               <div class="col-lg-5">
-
                 <div class="card bg-primary text-white rounded-3">
                   <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                      <h5 class="mb-0">Card details</h5>
+                      <h5 class="mb-0">Order details</h5>
                     </div>
+                    {% if order.status == 'PLACE' %}
+                    <form action="" method="post">
+                      {% csrf_token %}
+                      <div class="form-outline form-white mb-2">
+                          {{ order_form.full_name }}
+                          <label class="form-label">Full name</label>
+                      </div>
+                      <div class="form-outline form-white mb-2">
+                          {{ order_form.address }}
+                          <label class="form-label">Delivery address</label>
+                      </div>
+                      <div class="form-outline form-white mb-2">
+                          {{ order_form.postal_code }}
+                          <label class="form-label">Postal code</label>
+                      </div>
+                      <div class="form-outline form-white mb-2">
+                          {{ order_form.phone_number }}
+                          <label class="form-label">Phone number</label>
+                      </div>
+                      <div class="form-outline form-white mb-2">
+                          {{ order_form.comment }}
+                          <label class="form-label">Your comment</label>
+                      </div>
 
-                    <p class="small mb-2">Card type</p>
-                    <a href="#!" type="submit" class="text-white"><i
-                        class="fab fa-cc-mastercard fa-2x me-2"></i></a>
-                    <a href="#!" type="submit" class="text-white"><i
-                        class="fab fa-cc-visa fa-2x me-2"></i></a>
-                    <a href="#!" type="submit" class="text-white"><i class="fab fa-cc-paypal fa-2x"></i></a>
-
-
-                    <form class="mt-4" action="{% url 'cart:cart_detail' %}" method="post" >
-                        {% csrf_token %}
-                        <div class="form-outline form-white mb-4">
-                          {{ payment_form.name }}
-                          <label class="form-label">Cardholder's Name</label>
-                        </div>
-
-                        <div class="form-outline form-white mb-4">
-                          {{ payment_form.card_number }}
-                          <label class="form-label"">Card Number</label>
-                        </div>
-
-                        <div class="row mb-4">
-                          <div class="col-md-6">
-                            <div class="form-outline form-white errors">
-                              {{ payment_form.expiration }}
-                              {{ payment_form.expiration.errors }}
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-outline form-white">
-                              {{ payment_form.cvv }}
-                              <label class="form-label" >CVV</label>
-                            </div>
-                          </div>
-                        </div>
-
-
-                      <hr class="my-4">
-
+                    <hr class="my-4">
                       <div class="d-flex justify-content-between mb-4">
                         <p class="mb-2">Total(Incl. taxes)</p>
-                          {% if currency == 'EURO' %}
-                            <p class="mb-2">{{ cart.get_total_price_euro }} €</p>
+                          {% if order.currency == 'EURO' %}
+                            <p class="mb-2">{{ order.order_cost }} €</p>
                           {% else %}
-                            <p class="mb-2">{{ cart.get_total_price_usd }} $</p>
+                            <p class="mb-2">{{ order.order_cost }} $</p>
                           {% endif %}
                       </div>
-                      <button type="submit" class="btn btn-info btn-block btn-lg">Checkout</button>
+                      <button type="submit" class="btn btn-info btn-block btn-lg">Place order</button>
                     </form>
+                    {% else %}
+                      <p class="mb-2">Full name: {{ order.full_name }} </p>
+                      <p class="mb-2">Address: {{ order.address }} </p>
+                      <p class="mb-2">Postal code: {{ order.postal_code }} </p>
+                      <p class="mb-2">Phone number: {{ order.phone_number }} </p>
+                      <p class="mb-2">Comment: {{ order.comment }} </p>
+                      <p class="mb-2">Last change: {{ order.updated }} </p>
+                      <hr class="my-4">
+                        <div class="d-flex justify-content-between mb-4">
+                          <p class="mb-2">Total(Incl. taxes)</p>
+                            {% if order.currency == 'EURO' %}
+                              <p class="mb-2">{{ order.order_cost }} €</p>
+                            {% else %}
+                              <p class="mb-2">{{ order.order_cost }} $</p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
                   </div>
                 </div>
               </div>
@@ -148,8 +127,5 @@
     </div>
   </div>
 </section>
-<script src="https://kit.fontawesome.com/26fc0dada0.js" crossorigin="anonymous"></script>
-<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
 {% endblock %}
