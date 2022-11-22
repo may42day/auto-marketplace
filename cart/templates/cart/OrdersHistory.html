@@ -4,13 +4,35 @@
 
 
 {% block content %}
-<section class="h-100 h-custom" style="background-color: #eee;">
-  <h1>orders hisroty</h1>
-  {% for order in orders %}
-    <div>
-        <h2><a href="{% url 'cart:order' order.pk %}">{{ order.pk }}</a></h2>
-    </div>
-  {% endfor %}
+<section class="purchase-history">
+  <div class="container py-5 h-100">
+    <h1>Purchase history</h1>
+      <table class='table' data-sort="table">
+        <thead>
+          <tr>
+            <th>Order</th>
+            <th>Status</th>
+            <th>Comment</th>
+            <th>Date</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+          <tr class="{{ order.get_html_class_for_table }}">
+            <td><a href="{% url 'cart:order' order.pk %}">#{{ order.pk }}</a></td>
+            <td>{{ order.get_status_display }}</td>
+            <td>{{ order.comment|linebreaks }}</td>
+            <td><nobr>{{ order.created }}</nobr></td>
+            {% if order.currency == 'EURO' %}
+              <td><nobr>{{ order.order_cost }} €</nobr></td>
+            {% else %}
+              <td><nobr>{{ order.order_cost }} $</nobr></td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+  </div>
 </section>
-
 {% endblock %}

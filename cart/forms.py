@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import NumberInput, TextInput
+from django.forms import NumberInput, TextInput, Textarea
 from django.core.validators import MinValueValidator, MaxValueValidator
 from .models import *
 import re
@@ -28,7 +28,7 @@ class AddToCartForm(forms.Form):
         super().__init__(*args, **kwargs)
         #self.fields['amount'].disabled = True
 
-widgets = {
+payment_widgets = {
     'name': TextInput(attrs={
         'placeholder': 'Cardholder\'s Name',
         'class': 'form-select form-select-lg',
@@ -62,10 +62,10 @@ widgets = {
 }
 
 class PaymentForm(forms.Form):
-    name = forms.CharField(widget=widgets['name'])
-    card_number = forms.IntegerField(widget=widgets['card_number'])
-    expiration = forms.CharField(widget=widgets['expiration'])
-    cvv = forms.IntegerField(widget=widgets['cvv'])
+    name = forms.CharField(widget=payment_widgets['name'])
+    card_number = forms.IntegerField(widget=payment_widgets['card_number'])
+    expiration = forms.CharField(widget=payment_widgets['expiration'])
+    cvv = forms.IntegerField(widget=payment_widgets['cvv'])
 
     def clean_expiration(self):
         data = self.cleaned_data
@@ -83,6 +83,31 @@ class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
         fields = ('full_name', 'address', 'postal_code', 'phone_number', 'comment')
+        widgets = {
+            'full_name':TextInput(attrs={
+                'placeholder': 'Full name',
+                'class': 'form-select form-select-lg',
+            }),
+            'address':TextInput(attrs={
+                'placeholder': 'Street address. City.',
+                'class': 'form-select form-select-lg',
+            }),
+            'postal_code':NumberInput(attrs={
+                'placeholder': '123456',
+                'class': 'form-select form-select-lg',
+                'minlength': 6,
+                'maxlength': 6,
+            }),
+            'phone_number':TextInput(attrs={
+                'placeholder': '+1 123 4567890',
+                'class': 'form-select form-select-lg',
+            }),
+            'comment':Textarea(attrs={
+                'placeholder': 'Comment for delivery',
+                'class': 'form-select form-select-lg',
+                'rows': 5,
+            }),
+        }
 
 
 

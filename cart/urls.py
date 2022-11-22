@@ -7,4 +7,5 @@ urlpatterns = [
     path('remove/<int:product_id>', remove_from_cart, name='remove_from_cart'),
     path('orders-history', OrdersHistory.as_view(), name='orders-history'),
     path('orders-history/<int:order_pk>', order_info, name='order'),
+    path('orders-history/<int:pk>/remove/', RemoveOrder.as_view(), name='remove-order'),
 ]
