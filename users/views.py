@@ -1,9 +1,8 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .forms import UserSignUpForm, ProfileForm
 from goods.models import Product
-
+from django.urls import reverse
 
 def index(request):
     return render(request, 'users/index.html')
@@ -19,7 +18,7 @@ def sign_up(request):
             user.is_active = True
             user.profile.user_type = profile_form.cleaned_data['user_type']
             user.save()
-            return HttpResponseRedirect('/')
+            return redirect(reverse('login_new'))
     else:
         user_form = UserSignUpForm()
         profile_form = ProfileForm()
