@@ -40,10 +40,10 @@
                   <div class="card-body">
                     <div class="d-flex justify-content-between">
                       <div class="d-flex flex-row align-items-center">
-                        <div>
+                        <div class="product-img">
                           <img
                             src="{{ product.picture.url }}"
-                            class="img-fluid rounded-3" alt="Shopping item" style="width: 65px;">
+                            alt="Shopping item" width="65">
                         </div>
                         <div class="ms-3">
                           <h5>{{ product.name|truncatewords:5 }}</h5>
@@ -78,7 +78,7 @@
                           <h5 class="mb-0"><nobr>{{ item.total_price_usd }} $ </nobr></h5>
                             {% endif %}
                         </div>
-                        <a href="{% url 'cart:remove_from_cart' product.id %}" style="color: #cecece;"><i class="fas fa-trash fa-lg"></i></a>
+                        <a href="{% url 'cart:remove_from_cart' product.id %}" ><i class="fas fa-trash fa-lg"></i></a>
                       </div>
                     </div>
                   </div>
@@ -158,6 +158,4 @@
   </div>
 </section>
 <script src="https://kit.fontawesome.com/26fc0dada0.js" crossorigin="anonymous"></script>
-<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 {% endblock %}
