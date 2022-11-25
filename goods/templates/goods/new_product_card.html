@@ -1,23 +1,36 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block link %}
-<link rel="stylesheet" href="{% static 'goods/forms.css' %}">{% endblock %}
 
-{% block title %}New card{% endblock %}
+{% block title %}New product card{% endblock %}
 
 {% block content %}
-    <h1>Create new product card</h1>
-
- <form enctype="multipart/form-data" method="post">
-        {% csrf_token %}
-        {% for field in card_form %}
-            <div class="form-style {% if field.errors %} errors {% endif %}">
-                {{ field.label_tag }}
-                {{ field }}
-                {{ field.errors }}
+<section class="new-product-card">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-5">
+                <div class="login-wrap p-4 p-md-5">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-steering-wheel"></i>
+                    </div>
+                    <h3 class="text-center mb-4">Create a new product card</h3>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ card_form.non_field_errors }}
+                        {% for field in card_form %}
+                            <div class="form-group mb-3">
+                                {{ field.label }}:
+                                {{ field }}
+                                {{ field.errors }}
+                            </div>
+                        {% endfor %}
+                        <div class="form-group mb-2">
+                            <button class="form-control btn btn-primary rounded submit px-3" type="submit">Create</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        {% endfor %}
-        <br>
-        <button type="submit">Create</button>
-    </form>
+        </div>
+    </div>
+</section>
+<script src="https://kit.fontawesome.com/26fc0dada0.js" crossorigin="anonymous"></script>
 {% endblock %}

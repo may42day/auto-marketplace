@@ -86,25 +86,25 @@ class OrderForm(forms.ModelForm):
         widgets = {
             'full_name':TextInput(attrs={
                 'placeholder': 'Full name',
-                'class': 'form-select form-select-lg',
+                'class': 'form-control',
             }),
             'address':TextInput(attrs={
                 'placeholder': 'Street address. City.',
-                'class': 'form-select form-select-lg',
+                'class': 'form-control',
             }),
             'postal_code':NumberInput(attrs={
                 'placeholder': '123456',
-                'class': 'form-select form-select-lg',
+                'class': 'form-control',
                 'minlength': 6,
                 'maxlength': 6,
             }),
             'phone_number':TextInput(attrs={
                 'placeholder': '+1 123 4567890',
-                'class': 'form-select form-select-lg',
+                'class': 'form-control',
             }),
             'comment':Textarea(attrs={
                 'placeholder': 'Comment for delivery',
-                'class': 'form-select form-select-lg',
+                'class': 'form-control',
                 'rows': 5,
             }),
         }
