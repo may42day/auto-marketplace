@@ -367,3 +367,29 @@ height: 100vh !important;
 .purchase-history{
     background-color: #eee;
 }
+
+.login-section{
+    background-color: #eee;
+    padding: 3em 0;
+}
+
+.login-wrap{
+	position: relative;
+	background: #fff;
+	border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
+}
+
+
+.signup-section{
+	padding: 1em 0;
+	background-color: #eee;
+}
+
+.fa-users{
+    color:#056fb7;
+}
+
+.fa-circle-user{
+    color:#056fb7;
+}
