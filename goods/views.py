@@ -1,11 +1,13 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse_lazy
 from .models import *
 from .forms import *
 from cart.forms import AddToCartForm
-from django.views.generic import ListView, DeleteView, DetailView
+from django.views.generic import View, ListView, DeleteView, DetailView
 
 class MarketPage(ListView):
     model = Category
@@ -147,3 +149,15 @@ def search(request):
             'add_to_cart_form':add_to_cart_form,
         })
     return HttpResponseRedirect('/')
+
+class RemoveProductOnModeration(LoginRequiredMixin, DeleteView):
+    model = Product
+    success_url = reverse_lazy('goods:moderation')
+
+
+class ApproveProductModeration(View):
+    model = Product
+
+    def post(self, request, pk):
+        self.model.objects.filter(pk=pk).update(on_moderation=False)
+        return HttpResponseRedirect(reverse_lazy('goods:moderation'))
