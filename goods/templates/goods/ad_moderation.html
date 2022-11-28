@@ -4,20 +4,51 @@
 
 
 {% block content %}
-    <h1>Product cards on moderation</h1>
-        {% for product in products %}
-            <div class="product-card">
-                <ul>{{ product.owner }}</ul>
-                <li>{{ product.name }}</li>
-                <li>{{ product.discription }}</li>
-                <li>{{ product.amount }}</li>
-                <li>{{ product.price }} {{ product.currency }}</li>
-                <li>Created: {{ product.created }}</li>
-                <li><a href="{{ category.slug }}/{{ product.id }}">Link</a></li>
-                {% if product.updated != product.created %}
-                    <li> Updated: {{ product.updated }}</li>
-                {% endif %}
-                <img src="{{product.picture.url}}" alt="Product Card" width="100" height="100">
+<section>
+    <div class="container mt-2 mb-3">
+        <div class="d-flex justify-content-center">
+            <h1>Product cards on moderation</h1>
+        </div>
+        <div class="row">
+            {% for product in products %}
+            {% if product.on_moderation %}
+            <div class="col-md-4">
+                <div class="product">
+                    <div class="product-image">
+                        <img src="{{product.picture.url}}" alt="{{ product.name }}" width="300" height="200">
+                    </div>
+                    <div class="info">
+                        <a href="{{ product.get_absolute_url }}"><h3>{{ product.name }}</h3></a>
+                        <div class="cat"><b>Category</b> <small>{{ product.category }}</small></div>
+                        <div class="subcat"><b>Subcategory</b> <small>{{ product.subcategory }}</small></div>
+                        <div class="info-box">
+                            <span class="amount">{{ product.amount }} qty available</span>
+                        </div>
+                        <div class="info-box">
+                            {% if currency == 'USD' %}
+                            <span class="price">{{ product.price_usd }} <small>$</small></span>
+                            {% else %}
+                            <span class="price">{{ product.price_euro }} <small>€</small></span>
+                            {% endif %}
+                        <div class="moderation-block btn-group" role="group">
+                             <form method="POST" action="{% url 'goods:moderation-remove' product.pk %}">
+                                 {% csrf_token %}
+                                 <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                            <form method="POST" action="{% url 'goods:moderation-approve' product.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success">Approve</button>
+                            </form>
+                        </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        {% endfor %}
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 {% endblock %}
