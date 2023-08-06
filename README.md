@@ -2,32 +2,47 @@
 
 Auto Marketplace - it's marketplace for customers and sellers of auto-goods.
 
-This is my first django project. It isn't fully finished yet and it will be updated in the future.
-
 ## Install
 
 ---
-
 1. Clone the repository:
 
 ```
 $ git clone https://github.com/may42day/auto-marketplace
 $ cd auto-marketplace
 ```
+2. Fill in .env file or use .env_example:
+```
+$ mv .env_example .env
+```
 
+3. Build docker containers:
+```
+$ docker-compose up -d
+```
+3. Run migrations:
+```
+$ docker exec -it auto-marketplace_backend_1 bash
+$ python manage.py makemigrations
+$ python manage.py migrate
+
+```
+4. Application started. Navigate to http://127.0.0.1:8000
+_Note that market page is empty untill you upload a content._
+
+Follow instructions below to run only the application:
+
+1. Repeat steps 1,2 above
 2. Create a virtual environment:
 
 ```
 $ python -m venv venv
-$ .\venv\Scripts\activate
+$ source venv/bin/activate
 ```
-
-_Note the (venv) in front of the prompt. This indicates that this terminal session operates in a virtual environment._
 
 3. Install the dependencies:
 
 ```
-$ cd auto-marketplace
 (venv)$ pip install -r requirements.txt
 ```
 
