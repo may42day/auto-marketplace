@@ -4,14 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('goods', '0005_remove_product_currency_remove_product_price'),
+        ("goods", "0005_remove_product_currency_remove_product_price"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='currencyrate',
-            options={'get_latest_by': 'updated'},
+            name="currencyrate",
+            options={"get_latest_by": "updated"},
         ),
     ]

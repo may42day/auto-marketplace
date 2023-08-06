@@ -4,18 +4,17 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('goods', '0004_currencyrate_product_price_euro_product_price_usd'),
+        ("goods", "0004_currencyrate_product_price_euro_product_price_usd"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='product',
-            name='currency',
+            model_name="product",
+            name="currency",
         ),
         migrations.RemoveField(
-            model_name='product',
-            name='price',
+            model_name="product",
+            name="price",
         ),
     ]

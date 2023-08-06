@@ -9,36 +9,39 @@ from .forms import *
 from cart.forms import AddToCartForm
 from django.views.generic import View, ListView, DeleteView, DetailView
 
+
 class MarketPage(ListView):
     model = Category
-    template_name = 'goods/market.html'
-    context_object_name = 'categories'
+    template_name = "goods/market.html"
+    context_object_name = "categories"
+
 
 class ProductCard(DetailView):
     model = Product
-    template_name = 'goods/product_card.html'
-    pk_url_kwarg = 'product_id'
+    template_name = "goods/product_card.html"
+    pk_url_kwarg = "product_id"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['cart_form'] = AddToCartForm()
-        if 'currency' in self.request.COOKIES:
-            context['currency'] = self.request.COOKIES.get('currency')
+        context["cart_form"] = AddToCartForm()
+        if "currency" in self.request.COOKIES:
+            context["currency"] = self.request.COOKIES.get("currency")
         else:
-            context['currency'] = 'EURO'
+            context["currency"] = "EURO"
         return context
+
 
 @login_required
 def create_product_card(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         card_form = NewCardForm(request.POST, request.FILES)
         if card_form.is_valid():
             product = card_form.save(commit=False)
             product.user = request.user
             currency_rate = float(CurrencyRate.objects.latest().Euro_to_Usd)
-            price = float(request.POST['price'])
-            currency = request.POST['currency']
-            if currency == 'USD':
+            price = float(request.POST["price"])
+            currency = request.POST["currency"]
+            if currency == "USD":
                 product.price_usd = price
                 product.price_euro = price / currency_rate
             else:
@@ -47,38 +50,51 @@ def create_product_card(request):
             product.average_rating = 0
             product.feedback_counter = 0
             product.save()
-            return HttpResponseRedirect(f'{product.get_absolute_url()}')
+            return HttpResponseRedirect(f"{product.get_absolute_url()}")
     else:
         card_form = NewCardForm()
-    return render(request, 'goods/new_product_card.html', context={
-        'card_form':card_form,
-    })
+    return render(
+        request,
+        "goods/new_product_card.html",
+        context={
+            "card_form": card_form,
+        },
+    )
+
 
 order_param_dict = {
-    'NEW':'-created',
-    'OLD':'created',
-    'CHEAP':'price_euro',
-    'EXPENSIVE':'-price_euro',
-    'RATING':'-average_rating',
+    "NEW": "-created",
+    "OLD": "created",
+    "CHEAP": "price_euro",
+    "EXPENSIVE": "-price_euro",
+    "RATING": "-average_rating",
 }
-def category(request, slug_category:str, slug_subcategory=None):
+
+
+def category(request, slug_category: str, slug_subcategory=None):
     current_category = get_object_or_404(Category, slug=slug_category)
 
-    if 'currency' in request.COOKIES:
-        currency = request.COOKIES.get('currency')
+    if "currency" in request.COOKIES:
+        currency = request.COOKIES.get("currency")
     else:
-        currency = 'EURO'
+        currency = "EURO"
 
     if request.GET:
-        currency = request.GET['currency']
-        new_param = request.GET['search_filter']
+        currency = request.GET["currency"]
+        new_param = request.GET["search_filter"]
         order_param = order_param_dict[new_param]
-        if 'on_stock' in request.GET:
-            products = Product.objects.filter(category=current_category.id, amount__gt=0, on_moderation=False).order_by(order_param)
+        if "on_stock" in request.GET:
+            products = Product.objects.filter(
+                category=current_category.id, amount__gt=0, on_moderation=False
+            ).order_by(order_param)
         else:
-            products = Product.objects.filter(category=current_category.id, amount__gt=-1, on_moderation=False).order_by(order_param)
+            products = Product.objects.filter(
+                category=current_category.id, amount__gt=-1, on_moderation=False
+            ).order_by(order_param)
     else:
-        products = Product.objects.filter(category=current_category.id, on_moderation=False).order_by('-created')
+        products = Product.objects.filter(
+            category=current_category.id, on_moderation=False
+        ).order_by("-created")
 
     add_to_cart_form = AddToCartForm()
 
@@ -88,71 +104,89 @@ def category(request, slug_category:str, slug_subcategory=None):
         products = products.filter(subcategory=current_subcategory)
 
     new_request = request.GET.copy()
-    new_request['currency'] = currency
+    new_request["currency"] = currency
     filters_form = SearchFiltersForm(new_request)
 
     products_list = products
     paginator = Paginator(products_list, 10)
-    page_number = request.GET.get('page')
+    page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    response = render(request, 'goods/category.html', context={
-        'current_category':current_category,
-        'products': products,
-        'cart_form': add_to_cart_form,
-        'filters_form': filters_form,
-        'current_subcategory':current_subcategory,
-        'currency':currency,
-        'page_obj': page_obj,
-    })
+    response = render(
+        request,
+        "goods/category.html",
+        context={
+            "current_category": current_category,
+            "products": products,
+            "cart_form": add_to_cart_form,
+            "filters_form": filters_form,
+            "current_subcategory": current_subcategory,
+            "currency": currency,
+            "page_obj": page_obj,
+        },
+    )
 
     if request.GET:
-        response.set_cookie('currency', currency)
+        response.set_cookie("currency", currency)
     return response
+
 
 @login_required
 def products_on_moderation(request):
     products = Product.objects.filter(on_moderation=True)
-    return render(request, 'goods/ad_moderation.html', context={
-        'products': products,
-    })
+    return render(
+        request,
+        "goods/ad_moderation.html",
+        context={
+            "products": products,
+        },
+    )
 
 
 def search(request):
-    search = request.GET.get('search', '')
+    search = request.GET.get("search", "")
     if search or request.GET:
-        if 'currency' in request.GET:
-            currency = request.GET['currency']
+        if "currency" in request.GET:
+            currency = request.GET["currency"]
         else:
-            currency = 'EURO'
-        if 'search_filter' in request.GET:
-            new_param = request.GET['search_filter']
+            currency = "EURO"
+        if "search_filter" in request.GET:
+            new_param = request.GET["search_filter"]
             order_param = order_param_dict[new_param]
         else:
-            order_param = '-created'
+            order_param = "-created"
         add_to_cart_form = AddToCartForm()
         filters_form = SearchFiltersForm(request.GET)
-        if 'on_stock' in request.GET:
-            products = Product.objects.filter(amount__gt=0, on_moderation=False).order_by(order_param)
+        if "on_stock" in request.GET:
+            products = Product.objects.filter(
+                amount__gt=0, on_moderation=False
+            ).order_by(order_param)
         else:
-            products = Product.objects.filter(amount__gt=-1, on_moderation=False).order_by(order_param)
+            products = Product.objects.filter(
+                amount__gt=-1, on_moderation=False
+            ).order_by(order_param)
 
         products_list = products
         paginator = Paginator(products_list, 10)
-        page_number = request.GET.get('page')
+        page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
 
-        return render(request, 'goods/search.html', context={
-            'page_obj':page_obj,
-            'currency': currency,
-            'filters_form':filters_form,
-            'add_to_cart_form':add_to_cart_form,
-        })
-    return HttpResponseRedirect('/')
+        return render(
+            request,
+            "goods/search.html",
+            context={
+                "page_obj": page_obj,
+                "currency": currency,
+                "filters_form": filters_form,
+                "add_to_cart_form": add_to_cart_form,
+            },
+        )
+    return HttpResponseRedirect("/")
+
 
 class RemoveProductOnModeration(LoginRequiredMixin, DeleteView):
     model = Product
-    success_url = reverse_lazy('goods:moderation')
+    success_url = reverse_lazy("goods:moderation")
 
 
 class ApproveProductModeration(View):
@@ -160,4 +194,4 @@ class ApproveProductModeration(View):
 
     def post(self, request, pk):
         self.model.objects.filter(pk=pk).update(on_moderation=False)
-        return HttpResponseRedirect(reverse_lazy('goods:moderation'))
+        return HttpResponseRedirect(reverse_lazy("goods:moderation"))

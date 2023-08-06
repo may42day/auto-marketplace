@@ -4,12 +4,14 @@ from .views import *
 from .forms import NewLoginForm
 
 urlpatterns = [
-    path('', index, name='index'),
-    path('my_products', seller_products, name='my_products'),
-    path('sign_up', sign_up, name='sign_up'),
-    path('login', LoginView.as_view(authentication_form=NewLoginForm), name="login_new"),
+    path("", index, name="index"),
+    path("my_products", seller_products, name="my_products"),
+    path("sign_up", sign_up, name="sign_up"),
+    path(
+        "login", LoginView.as_view(authentication_form=NewLoginForm), name="login_new"
+    ),
 ]
 
 urlpatterns += [
-    path('accounts/', include('django.contrib.auth.urls')),
+    path("accounts/", include("django.contrib.auth.urls")),
 ]

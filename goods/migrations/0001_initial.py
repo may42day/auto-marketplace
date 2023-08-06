@@ -8,7 +8,6 @@ import goods.models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -17,57 +16,150 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Category',
+            name="Category",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('slug', models.SlugField(default='')),
-                ('picture', models.ImageField(blank=True, null=True, upload_to=goods.models.category_directory_path, verbose_name='Category Image')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100)),
+                ("slug", models.SlugField(default="")),
+                (
+                    "picture",
+                    models.ImageField(
+                        blank=True,
+                        null=True,
+                        upload_to=goods.models.category_directory_path,
+                        verbose_name="Category Image",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Product',
+            name="Product",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=80)),
-                ('part_number', models.CharField(max_length=30)),
-                ('discription', models.TextField()),
-                ('amount', models.PositiveIntegerField()),
-                ('price', models.DecimalField(decimal_places=2, max_digits=10, validators=[django.core.validators.MinValueValidator(1)])),
-                ('currency', models.CharField(choices=[('EUR', 'Euro'), ('USD', 'Dollars')], default='USD', max_length=3)),
-                ('picture', models.ImageField(blank=True, null=True, upload_to=goods.models.user_directory_path, verbose_name='Product Image')),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('updated', models.DateTimeField(auto_now=True)),
-                ('on_moderation', models.BooleanField(default=True)),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='products', to='goods.category')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=80)),
+                ("part_number", models.CharField(max_length=30)),
+                ("discription", models.TextField()),
+                ("amount", models.PositiveIntegerField()),
+                (
+                    "price",
+                    models.DecimalField(
+                        decimal_places=2,
+                        max_digits=10,
+                        validators=[django.core.validators.MinValueValidator(1)],
+                    ),
+                ),
+                (
+                    "currency",
+                    models.CharField(
+                        choices=[("EUR", "Euro"), ("USD", "Dollars")],
+                        default="USD",
+                        max_length=3,
+                    ),
+                ),
+                (
+                    "picture",
+                    models.ImageField(
+                        blank=True,
+                        null=True,
+                        upload_to=goods.models.user_directory_path,
+                        verbose_name="Product Image",
+                    ),
+                ),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                ("updated", models.DateTimeField(auto_now=True)),
+                ("on_moderation", models.BooleanField(default=True)),
+                (
+                    "category",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="products",
+                        to="goods.category",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Subcategory',
+            name="Subcategory",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('slug', models.SlugField(default='')),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='subcategories', to='goods.category')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100)),
+                ("slug", models.SlugField(default="")),
+                (
+                    "category",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="subcategories",
+                        to="goods.category",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='ShoppingCart',
+            name="ShoppingCart",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('amount', models.PositiveIntegerField()),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='goods.product')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("amount", models.PositiveIntegerField()),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="goods.product"
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='product',
-            name='subcategory',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='products', to='goods.subcategory'),
+            model_name="product",
+            name="subcategory",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="products",
+                to="goods.subcategory",
+            ),
         ),
         migrations.AddField(
-            model_name='product',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="product",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+            ),
         ),
     ]

@@ -4,15 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('feedback', '0002_alter_feedback_product'),
+        ("feedback", "0002_alter_feedback_product"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='feedback',
-            name='rating',
-            field=models.CharField(choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')], default='5', max_length=1),
+            model_name="feedback",
+            name="rating",
+            field=models.CharField(
+                choices=[("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")],
+                default="5",
+                max_length=1,
+            ),
         ),
     ]

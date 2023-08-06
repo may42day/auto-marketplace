@@ -19,10 +19,10 @@ def add_to_shopping_cart(request, product_id):
         data = form.cleaned_data
         cart.add_to_cart(
             product=product,
-            amount=data['amount'],
-            update_amount=data['amount'],
+            amount=data["amount"],
+            update_amount=data["amount"],
         )
-    return redirect('cart:cart_detail')
+    return redirect("cart:cart_detail")
 
 
 @login_required
@@ -30,70 +30,70 @@ def remove_from_cart(request, product_id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
     cart.remove(product)
-    return redirect('cart:cart_detail')
+    return redirect("cart:cart_detail")
 
 
 @login_required
 def cart_detail(request):
     cart = Cart(request)
     for product in cart:
-        product['update_amount_form'] = AddToCartForm(initial={
-            'amount': product['amount'],
-            'update': True
-        })
+        product["update_amount_form"] = AddToCartForm(
+            initial={"amount": product["amount"], "update": True}
+        )
 
-    if 'currency' in request.COOKIES:
-        currency = request.COOKIES.get('currency')
+    if "currency" in request.COOKIES:
+        currency = request.COOKIES.get("currency")
     else:
-        currency = 'EURO'
+        currency = "EURO"
 
     payment_form = PaymentForm(request.POST)
-    error_message = ''
-    if request.method == 'POST' and payment_form.is_valid():
+    error_message = ""
+    if request.method == "POST" and payment_form.is_valid():
         if len(cart) > 0:
             order = Order.objects.create(
-                user=request.user,
-                status='PLACE',
-                currency=currency)
+                user=request.user, status="PLACE", currency=currency
+            )
 
             for item in cart:
-                if item['product'].amount < item['amount']:
-                    amount = item['product'].amount
+                if item["product"].amount < item["amount"]:
+                    amount = item["product"].amount
                 else:
-                    amount = item['amount']
-                item['product'].amount -= amount
-                item['product'].save()
+                    amount = item["amount"]
+                item["product"].amount -= amount
+                item["product"].save()
 
-                if currency == 'Euro':
-                    price = item['price_euro']
+                if currency == "Euro":
+                    price = item["price_euro"]
                 else:
-                    price = item['price_usd']
+                    price = item["price_usd"]
 
                 OrderItem.objects.create(
                     order=order,
-                    product=item['product'],
+                    product=item["product"],
                     amount=amount,
                     price=price,
                 )
 
-
             cart.clear()
-            return redirect(reverse('cart:order', kwargs={'order_pk':order.pk}))
-        error_message = 'Cart is empty or product is not available'
+            return redirect(reverse("cart:order", kwargs={"order_pk": order.pk}))
+        error_message = "Cart is empty or product is not available"
 
-    return render(request, 'cart/ShoppingCart.html', context={
-        'cart':cart,
-        'currency': currency,
-        'payment_form': payment_form,
-        'error_message': error_message,
-    })
-
+    return render(
+        request,
+        "cart/ShoppingCart.html",
+        context={
+            "cart": cart,
+            "currency": currency,
+            "payment_form": payment_form,
+            "error_message": error_message,
+        },
+    )
 
 
 class OrdersHistory(LoginRequiredMixin, ListView):
     model = Order
-    template_name = 'cart/OrdersHistory.html'
-    context_object_name = 'orders'
+    template_name = "cart/OrdersHistory.html"
+    context_object_name = "orders"
 
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user)
@@ -107,27 +107,28 @@ def order_info(request, order_pk):
         data = request.POST
         order_form = OrderForm(data)
 
-        if request.POST and order_form.is_valid() and order.status == 'PLACE':
-            order.full_name = data['full_name']
-            order.address = data['address']
-            order.postal_code = data['postal_code']
-            order.phone_number = data['phone_number']
-            if 'comment' in data:
-                order.comment = data['comment']
-            order.status = 'OPEN'
+        if request.POST and order_form.is_valid() and order.status == "PLACE":
+            order.full_name = data["full_name"]
+            order.address = data["address"]
+            order.postal_code = data["postal_code"]
+            order.phone_number = data["phone_number"]
+            if "comment" in data:
+                order.comment = data["comment"]
+            order.status = "OPEN"
             order.save()
 
-        return render(request, 'cart/Order.html', context={
-            'order': order,
-            'items': items,
-            'order_form': order_form,
-
-        })
-    return redirect('/')
+        return render(
+            request,
+            "cart/Order.html",
+            context={
+                "order": order,
+                "items": items,
+                "order_form": order_form,
+            },
+        )
+    return redirect("/")
 
 
 class RemoveOrder(LoginRequiredMixin, DeleteView):
     model = Order
-    success_url = reverse_lazy('cart:orders-history')
-
-
+    success_url = reverse_lazy("cart:orders-history")

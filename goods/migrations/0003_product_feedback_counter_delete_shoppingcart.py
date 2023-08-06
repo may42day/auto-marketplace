@@ -5,18 +5,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('goods', '0002_product_average_rating'),
+        ("goods", "0002_product_average_rating"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='product',
-            name='feedback_counter',
-            field=models.PositiveIntegerField(default=0, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(10000)]),
+            model_name="product",
+            name="feedback_counter",
+            field=models.PositiveIntegerField(
+                default=0,
+                validators=[
+                    django.core.validators.MinValueValidator(0),
+                    django.core.validators.MaxValueValidator(10000),
+                ],
+            ),
         ),
         migrations.DeleteModel(
-            name='ShoppingCart',
+            name="ShoppingCart",
         ),
     ]

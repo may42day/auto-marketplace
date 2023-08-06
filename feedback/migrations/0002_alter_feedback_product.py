@@ -5,16 +5,19 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('goods', '0002_product_average_rating'),
-        ('feedback', '0001_initial'),
+        ("goods", "0002_product_average_rating"),
+        ("feedback", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='feedback',
-            name='product',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='feedback', to='goods.product'),
+            model_name="feedback",
+            name="product",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="feedback",
+                to="goods.product",
+            ),
         ),
     ]

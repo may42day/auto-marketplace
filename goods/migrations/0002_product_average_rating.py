@@ -5,16 +5,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('goods', '0001_initial'),
+        ("goods", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='product',
-            name='average_rating',
-            field=models.DecimalField(decimal_places=1, default=0, max_digits=2, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(5)]),
+            model_name="product",
+            name="average_rating",
+            field=models.DecimalField(
+                decimal_places=1,
+                default=0,
+                max_digits=2,
+                validators=[
+                    django.core.validators.MinValueValidator(0),
+                    django.core.validators.MaxValueValidator(5),
+                ],
+            ),
             preserve_default=False,
         ),
     ]

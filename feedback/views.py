@@ -5,6 +5,7 @@ from .forms import AddFeedbackForm
 from goods.models import Product
 from .models import Feedback
 
+
 @require_POST
 @login_required
 def add_feedback(request, product_id):
@@ -15,8 +16,7 @@ def add_feedback(request, product_id):
     feedback.product = product
     feedback.save()
     url = feedback.product.get_absolute_url()
-    return HttpResponseRedirect(f'{url}')
-
+    return HttpResponseRedirect(f"{url}")
 
 
 @login_required
@@ -27,5 +27,4 @@ def remove_feedback(request, feedback_id):
     if request.user == feedback.user:
         feedback.delete()
 
-    return HttpResponseRedirect(f'{url}')
-
+    return HttpResponseRedirect(f"{url}")
